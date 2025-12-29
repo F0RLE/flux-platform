@@ -36,9 +36,16 @@ DIR_CONFIGS = os.path.join(USER_ROOT, "Configs")
 # System data
 SYSTEM_ROOT = os.path.join(APPDATA_ROOT, "System")
 RUNTIME_DIR = os.path.join(SYSTEM_ROOT, "Runtime")
+LAUNCHER_DIR = os.path.join(SYSTEM_ROOT, "Launcher")  # Launcher code from GitHub
+ENGINE_DIR = os.path.join(SYSTEM_ROOT, "Engine")      # SD, Ollama, etc.
 DIR_LOGS = os.path.join(SYSTEM_ROOT, "Logs")
 DIR_TEMP = os.path.join(SYSTEM_ROOT, "Temp")
 DIR_FONTS = os.path.join(SYSTEM_ROOT, "Fonts")
+
+# Runtime components
+PYTHON_DIR = os.path.join(RUNTIME_DIR, "python")
+ELECTRON_DIR = os.path.join(RUNTIME_DIR, "electron")
+GIT_DIR = os.path.join(RUNTIME_DIR, "git")
 
 # =============================================================================
 # CONFIGURATION FILES

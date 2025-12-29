@@ -18,9 +18,9 @@ TORCHAUDIO_VERSION = "2.3.1"
 XFORMERS_VERSION = "0.0.27"
 CUDA_VERSION = "cu121"
 
-# Paths
+# Paths (must match paths.py structure)
 APPDATA = os.environ["APPDATA"]
-SD_DIR = os.path.join(APPDATA, "FluxData", "data", "Engine", "stable-diffusion-webui-reforge")
+SD_DIR = os.path.join(APPDATA, "FluxData", "System", "Engine", "stable-diffusion-webui-reforge")
 VENV_DIR = os.path.join(SD_DIR, "venv")
 VENV_PYTHON = os.path.join(VENV_DIR, "Scripts", "python.exe")
 SITE_PACKAGES = os.path.join(VENV_DIR, "Lib", "site-packages")

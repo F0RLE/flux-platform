@@ -9,11 +9,11 @@ Add-Type -AssemblyName System.Drawing
 $ErrorActionPreference = "Continue"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-# Paths
+# Paths (must match paths.py structure)
 $AppData = "$env:APPDATA\FluxData"
-$RuntimeDir = "$AppData\data\runtime"
-$LogsDir = "$AppData\data\logs"
-$TempDir = "$AppData\data\temp"
+$RuntimeDir = "$AppData\System\Runtime"
+$LogsDir = "$AppData\System\Logs"
+$TempDir = "$AppData\System\Temp"
 
 # Component directories
 $PythonDir = "$RuntimeDir\python"
