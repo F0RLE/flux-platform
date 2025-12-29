@@ -1,0 +1,119 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* Home Entry Animation */
+#page-home .home-content {
+    opacity: 0;
+    animation: homeEntry 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: 0.1s;
+}
+
+@keyframes homeEntry {
+    0% {
+        opacity: 0;
+        transform: translateY(15px) scale(0.98);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Redesigned in section below */
+
+#page-debug {
+    transition: none;
+}
+
+#page-debug.active {
+    opacity: 1;
+    transform: none;
+}
+
+/* Redesigned Console Buttons - Segmented Style */
+.terminal-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    /* Slight border */
+    border-radius: 8px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Monocraft', monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+    min-width: 80px;
+}
+
+.terminal-tab:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.terminal-tab.active {
+    background: var(--primary);
+    /* Filled style for active */
+    color: white;
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+    border-color: var(--primary);
+}
+
+/* Remove dots as per 'different buttons' request - keeping structure but hiding or restyling */
+.status-dot {
+    display: none;
+    /* User seems to want clean buttons based on 'make different' and uploaded images showing solid blocks */
+}
+
+/* If we want to keep dots but make them different, we could... but let's try clean first */
+
+
+.btn-clear-terminal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: auto;
+    padding: 0.5rem 0.8rem;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Monocraft', monospace;
+}
+
+.btn-clear-terminal:hover {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--danger);
+}
+
+.terminal-scroll-area {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    overflow-y: auto;
+    font-family: 'Monocraft', monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.terminal-scroll-area::-webkit-scrollbar {
+    width: 10px;
+}
+
+.terminal-scroll-area::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 5px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+.terminal-scroll-area::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}

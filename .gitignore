@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+*.egg
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Project specific
+*.log
+*.tmp
+*.bak
+config.ini
+
+# Environment files (CRITICAL: Do not commit secrets)
+.env
+.env.local
+**/.env
+**/.env.local
+
+# Build artifacts
+build/
+dist/
+*.spec
+*.exe
+
+# Module artifacts
+modules/**/__pycache__/
+modules/**/*.pyc
+
+# Local Data
+data/
+FluxData/
