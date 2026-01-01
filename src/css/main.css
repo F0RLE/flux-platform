@@ -1,0 +1,33 @@
+/* ===========================
+   Flux Platform - Main CSS
+   =========================== */
+
+/* === BASE === */
+@import 'base/variables.css';
+@import 'base/reset.css';
+@import 'base/scrollbar.css';
+@import 'base/animations.css';
+
+/* === LAYOUT === */
+@import 'layout/sidebar.css';
+@import 'layout/controls.css';
+@import 'layout/main-area.css';
+
+/* === COMPONENTS === */
+@import 'components/icons.css';
+@import 'components/splash.css';
+@import 'components/buttons.css';
+@import 'components/forms.css';
+@import 'components/cards.css';
+@import 'components/modals.css';
+@import 'components/toasts.css';
+@import 'components/status.css';
+@import 'components/system-info.css';
+
+/* === PAGES === */
+@import 'pages/console.css';
+@import 'pages/chat.css';
+@import 'pages/settings.css';
+@import 'pages/downloads.css';
+@import 'pages/modules.css';
+@import 'pages/debug.css';

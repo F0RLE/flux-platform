@@ -1,53 +1,85 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-*.egg-info/
-*.egg
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  Flux Platform - .gitignore                                      ║
+# ║  Stack: Rust + Tauri v2 + Vite + TypeScript                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
 
-# Virtual environments
-venv/
-env/
-.venv/
-.env/
+# ─────────────────────────────────────────────────────────────────────
+# Rust / Tauri
+# ─────────────────────────────────────────────────────────────────────
+**/target/
+Cargo.lock
 
-# IDE
+# Tauri auto-generated schemas (regenerated on build)
+source/backend/gen/schemas/
+
+# ─────────────────────────────────────────────────────────────────────
+# Node.js / Vite
+# ─────────────────────────────────────────────────────────────────────
+node_modules/
+**/dist/
+*.tsbuildinfo
+.vite/
+
+# NPM
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ─────────────────────────────────────────────────────────────────────
+# Environment & Secrets (CRITICAL: Never commit!)
+# ─────────────────────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+**/.env
+!**/.env.example
+
+# ─────────────────────────────────────────────────────────────────────
+# IDE / Editors
+# ─────────────────────────────────────────────────────────────────────
 .vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
 .idea/
 *.swp
 *.swo
 *~
+*.sublime-workspace
+*.sublime-project
 
-
-# OS
+# ─────────────────────────────────────────────────────────────────────
+# Operating System
+# ─────────────────────────────────────────────────────────────────────
 .DS_Store
+.DS_Store?
+._*
 Thumbs.db
-desktop.ini
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
 
-# Project specific
+# ─────────────────────────────────────────────────────────────────────
+# Build & Release
+# ─────────────────────────────────────────────────────────────────────
+release/
+build/
+*.exe
+!source/tools/bin/*.exe
+!source/tools/bin/*.dll
+
+# ─────────────────────────────────────────────────────────────────────
+# Logs & Temporary Files
+# ─────────────────────────────────────────────────────────────────────
 *.log
 *.tmp
+*.temp
 *.bak
-config.ini
+*.cache
 
-# Environment files (CRITICAL: Do not commit secrets)
-.env
-.env.local
-**/.env
-**/.env.local
-
-# Build artifacts
-build/
-dist/
-*.spec
-*.exe
-
-# Module artifacts
-modules/**/__pycache__/
-modules/**/*.pyc
-
-# Local Data
-data/
+# ─────────────────────────────────────────────────────────────────────
+# Application Data (runtime generated)
+# ─────────────────────────────────────────────────────────────────────
 FluxData/
+data/

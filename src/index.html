@@ -1,0 +1,1218 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:; base-uri 'self';">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flux Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css?v=4">
+    <link rel="stylesheet" href="css/inline-body-styles.css?v=4">
+    <link rel="stylesheet" href="css/styles-sysmon.css?v=1">
+</head>
+
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <div class="splash-logo-container">
+                <div class="splash-glow"></div>
+                <svg class="splash-logo-svg" viewBox="0 0 24 24" fill="none" stroke="url(#splash-grad)" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <defs>
+                        <linearGradient id="splash-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#8a2be2" />
+                            <stop offset="100%" stop-color="#5ddcff" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+            </div>
+            <div class="splash-title">Flux Platform</div>
+            <div class="splash-bar"></div>
+        </div>
+    </div>
+    <!-- SVG Icon Definitions -->
+    <svg width="0" height="0" style="display:none;">
+        <symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </symbol>
+        <symbol id="icon-console" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polyline points="4 17 10 11 4 5"></polyline>
+            <line x1="12" y1="19" x2="20" y2="19"></line>
+        </symbol>
+        <symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+                d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8.38M18 14v-4h-4M14 2h4.44a2 2 0 0 1 2 2v2M18 2l-4.5 4.5" />
+        </symbol>
+        <symbol id="icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path>
+            <path d="M8 10h8"></path>
+            <path d="M8 14h5"></path>
+        </symbol>
+        <symbol id="icon-paperclip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+                d="M21.44 11.05l-8.49 8.49a5 5 0 0 1-7.07-7.07l8.49-8.49a3.5 3.5 0 0 1 4.95 4.95l-8.49 8.49a2 2 0 0 1-2.83-2.83l8.49-8.49">
+            </path>
+        </symbol>
+        <symbol id="icon-start" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </symbol>
+        <symbol id="icon-stop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+        </symbol>
+        <symbol id="icon-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+        </symbol>
+        <symbol id="icon-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 8V4H8"></path>
+            <rect x="4" y="8" width="16" height="12" rx="2"></rect>
+            <path d="M2 14h2"></path>
+            <path d="M20 14h2"></path>
+            <path d="M15 13v2"></path>
+            <path d="M9 13v2"></path>
+        </symbol>
+        <symbol id="icon-llm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+                d="M12 2a10 10 0 0 0-2 19.5v-1.5a8 8 0 1 1 0-16c1.7 0 3.3.7 4.5 1.9l-1.5 1.5h5v-5L16.2 4.8A9.9 9.9 0 0 0 12 2Z">
+            </path>
+            <path d="m10 10 2 2 2-2"></path>
+            <path d="m10 14 2 2 2-2"></path>
+        </symbol>
+        <symbol id="icon-sd" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M20 12V8a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v4"></path>
+            <path d="M18 12h2a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2Z"></path>
+            <path d="M6 12h2a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2Z"></path>
+        </symbol>
+        <symbol id="icon-system" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="18" rx="2"></rect>
+            <line x1="2" y1="9" x2="22" y2="9"></line>
+            <line x1="8" y1="21" x2="8" y2="9"></line>
+            <line x1="16" y1="21" x2="16" y2="9"></line>
+        </symbol>
+        <symbol id="icon-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+        </symbol>
+        <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M3 6h18"></path>
+            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+            <path d="M10 11v6"></path>
+            <path d="M14 11v6"></path>
+        </symbol>
+        <symbol id="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+        </symbol>
+        <symbol id="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"></path>
+            <path d="M1 1l22 22"></path>
+        </symbol>
+        <symbol id="icon-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+        </symbol>
+        <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+        </symbol>
+        <symbol id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+        </symbol>
+        <symbol id="icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+        </symbol>
+        <symbol id="icon-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </symbol>
+        <symbol id="icon-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+        </symbol>
+        <symbol id="icon-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </symbol>
+        <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+        </symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </symbol>
+        <symbol id="icon-network" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+            </path>
+        </symbol>
+        <symbol id="icon-disk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+        </symbol>
+        <symbol id="icon-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+            <rect x="9" y="9" width="6" height="6"></rect>
+            <path d="M15 2v2"></path>
+            <path d="M9 2v2"></path>
+            <path d="M15 20v2"></path>
+            <path d="M9 20v2"></path>
+            <path d="M2 15h2"></path>
+            <path d="M2 9h2"></path>
+            <path d="M20 15h2"></path>
+            <path d="M20 9h2"></path>
+        </symbol>
+        <symbol id="icon-gpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+            <line x1="7" y1="8" x2="7" y2="12"></line>
+            <line x1="17" y1="8" x2="17" y2="12"></line>
+        </symbol>
+        <symbol id="icon-ram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+            <line x1="4" y1="9" x2="20" y2="9"></line>
+            <line x1="9" y1="4" x2="9" y2="20"></line>
+        </symbol>
+        <symbol id="icon-vram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="4" y="4" width="16" height="16" rx="2" />
+            <path d="M9 10l3 4 3-4" />
+        </symbol>
+    </svg>
+
+    <div id="sidebar">
+        <div id="sidebar-drag-handle"></div>
+        <div class="logo-area">
+            <!-- Launcher icon (shown when collapsed) -->
+            <div class="sidebar-logo-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="url(#sidebar-logo-grad)" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <defs>
+                        <linearGradient id="sidebar-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#8a2be2" />
+                            <stop offset="100%" stop-color="#5ddcff" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+            </div>
+            <!-- Title (hidden when collapsed) -->
+            <div class="sidebar-title-wrapper">
+                <div class="app-title" data-i18n="ui.launcher.web.title">Flux Platform</div>
+            </div>
+        </div>
+
+
+
+        <div class="nav-section main-menu">
+            <button class="nav-btn active" data-page="home"><svg class="icon">
+                    <use href="#icon-home"></use>
+                </svg> <span data-i18n="ui.launcher.web.main_menu">Main Menu</span></button>
+            <button class="nav-btn" data-page="chat"><svg class="icon">
+                    <use href="#icon-chat"></use>
+                </svg> <span data-i18n="ui.launcher.web.chat">Чат</span></button>
+            <button class="nav-btn" data-page="modules"><svg class="icon">
+                    <use href="#icon-folder"></use>
+                </svg> <span data-i18n="ui.launcher.web.modules">Модули</span></button>
+            <button class="nav-btn" data-page="settings"><svg class="icon">
+                    <use href="#icon-settings"></use>
+                </svg> <span data-i18n="ui.launcher.web.settings">Настройки</span></button>
+            <button class="nav-btn" data-page="debug"><svg class="icon">
+                    <use href="#icon-console"></use>
+                </svg> <span data-i18n="ui.launcher.web.console">Консоль</span></button>
+        </div>
+
+        <!-- System Monitor -->
+        <div class="nav-section" style="margin: auto 0;">
+            <div id="system-monitor" class="sysmon-card">
+                <!-- CPU -->
+                <div class="sysmon-stat" data-monitor-id="cpu">
+                    <div class="sysmon-header">
+                        <div class="sysmon-label">
+                            <svg class="icon sysmon-icon">
+                                <use href="#icon-cpu"></use>
+                            </svg>
+                            <span class="sysmon-label-text" data-i18n="ui.launcher.web.cpu">CPU</span>
+                        </div>
+                        <div id="cpu-percent" class="sysmon-value">--</div>
+                    </div>
+                    <div class="sysmon-track">
+                        <div id="cpu-progress" class="sysmon-fill"></div>
+                    </div>
+                </div>
+
+                <!-- GPU -->
+                <div class="sysmon-stat" data-monitor-id="gpu">
+                    <div class="sysmon-header">
+                        <div class="sysmon-label">
+                            <svg class="icon sysmon-icon">
+                                <use href="#icon-gpu"></use>
+                            </svg>
+                            <span class="sysmon-label-text" data-i18n="ui.launcher.web.gpu">GPU</span>
+                        </div>
+                        <div id="gpu-util" class="sysmon-value">--</div>
+                    </div>
+                    <div class="sysmon-track">
+                        <div id="gpu-progress" class="sysmon-fill"></div>
+                    </div>
+                </div>
+
+                <!-- RAM -->
+                <div class="sysmon-stat" data-monitor-id="ram">
+                    <div class="sysmon-header">
+                        <div class="sysmon-label">
+                            <svg class="icon sysmon-icon">
+                                <use href="#icon-ram"></use>
+                            </svg>
+                            <span class="sysmon-label-text" data-i18n="ui.launcher.web.ram">RAM</span>
+                        </div>
+                        <div id="ram-percent" class="sysmon-value">--</div>
+                    </div>
+                    <div class="sysmon-track">
+                        <div id="ram-progress" class="sysmon-fill"></div>
+                    </div>
+                </div>
+
+                <!-- VRAM -->
+                <div class="sysmon-stat" data-monitor-id="vram">
+                    <div class="sysmon-header">
+                        <div class="sysmon-label">
+                            <svg class="icon sysmon-icon">
+                                <use href="#icon-vram"></use>
+                            </svg>
+                            <span class="sysmon-label-text" data-i18n="ui.launcher.web.vram">VRAM</span>
+                        </div>
+                        <div id="gpu-memory" class="sysmon-value">--</div>
+                    </div>
+                    <div class="sysmon-track">
+                        <div id="vram-progress" class="sysmon-fill"></div>
+                    </div>
+                </div>
+
+                <div class="sysmon-divider"></div>
+
+                <!-- Disk -->
+                <div class="sysmon-stat" data-monitor-id="disk">
+                    <div class="sysmon-header">
+                        <div class="sysmon-label">
+                            <svg class="icon sysmon-icon">
+                                <use href="#icon-disk"></use>
+                            </svg>
+                            <span class="sysmon-label-text" data-i18n="ui.launcher.web.disk">Disk</span>
+                        </div>
+                        <div id="disk-usage" class="sysmon-value">--</div>
+                    </div>
+                    <div class="sysmon-track">
+                        <div id="disk-progress" class="sysmon-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Network -->
+                <div class="sysmon-stat" data-monitor-id="network">
+                    <div class="sysmon-header">
+                        <div class="sysmon-label">
+                            <svg class="icon sysmon-icon">
+                                <use href="#icon-network"></use>
+                            </svg>
+                            <span class="sysmon-label-text" data-i18n="ui.launcher.web.network">Network</span>
+                        </div>
+                        <div id="network-status" class="sysmon-value">--</div>
+                    </div>
+                    <div class="sysmon-track">
+                        <div id="network-progress" class="sysmon-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Menu -->
+        <div class="nav-section bottom-menu" style="margin-top: auto;">
+            <button class="nav-btn" data-page="downloads"><svg class="icon">
+                    <use href="#icon-download"></use>
+                </svg> <span data-i18n="ui.launcher.web.downloads">Загрузки</span></button>
+        </div>
+
+        <!-- Sidebar footer removed -->
+    </div>
+
+    </div>
+
+    <!-- App Header (Glass Panel) -->
+    <header id="app-header">
+        <!-- Left: Language Switcher -->
+        <div class="lang-switcher-root">
+            <!-- Sliding Menu Items (Other Languages) -->
+            <div class="lang-menu-items" id="lang-menu-items">
+                <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">
+                    <span class="flag-icon flag-gb"></span>
+                </button>
+                <button class="lang-btn" data-lang="ru" onclick="setLanguage('ru')">
+                    <span class="flag-icon flag-ru"></span>
+                </button>
+                <button class="lang-btn" data-lang="zh" onclick="setLanguage('zh')">
+                    <span class="flag-icon flag-cn"></span>
+                </button>
+            </div>
+
+            <!-- Current Language Trigger -->
+            <button class="lang-btn current-lang-trigger" id="current-lang-trigger" onclick="toggleLangMenu()">
+                <span class="flag-icon flag-gb"></span>
+            </button>
+        </div>
+
+        <!-- Right: Window Controls -->
+        <div class="top-controls">
+            <button class="window-control-btn minimize-btn" id="minimize-btn" onclick="minimizeWindow()"
+                data-i18n-title="ui.launcher.button.minimize" title="Minimize">
+                <svg class="icon" style="width: 1.2em; height: 1.2em; stroke: currentColor; fill: none;"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                </svg>
+            </button>
+            <button class="window-control-btn maximize-btn" id="maximize-btn" onclick="toggleMaximizeWindow()"
+                data-i18n-title="ui.launcher.button.maximize" title="Maximize">
+                <svg class="icon" id="maximize-icon"
+                    style="width: 1.2em; height: 1.2em; stroke: currentColor; fill: none;" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 8h4V4m12 4h-4V4m4 12h-4v4M4 16h4v4" />
+                </svg>
+            </button>
+            <button class="close-btn" id="close-btn" onclick="showCloseConfirmModal()"
+                data-i18n-title="ui.launcher.button.close" title="Close all services">
+                <svg class="icon" style="width: 1.2em; height: 1.2em; stroke: currentColor; fill: none;"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Language Switcher in top-left of content area -->
+    <!-- Language Switcher - Slide Out -->
+
+
+    <!-- Top controls bar with window controls on right -->
+
+
+    <!-- Confirmation Modal -->
+
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Action Feedback -->
+    <div class="action-feedback" id="action-feedback">
+        <div class="action-feedback-icon"></div>
+    </div>
+
+    <div id="main-area">
+        <!-- Home Page -->
+        <div id="page-home" class="page active">
+            <div class="home-content">
+                <style>
+                    /* Home Entry Animation */
+                    #page-home .home-content {
+                        opacity: 0;
+                        animation: homeEntry 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+                        animation-delay: 0.1s;
+                    }
+
+                    @keyframes homeEntry {
+                        0% {
+                            opacity: 0;
+                            transform: translateY(15px) scale(0.98);
+                        }
+
+                        100% {
+                            opacity: 1;
+                            transform: translateY(0) scale(1);
+                        }
+                    }
+                </style>
+                <div class="home-title" data-i18n="ui.launcher.web.home_title">Main Menu</div>
+
+            </div>
+        </div>
+
+        <!-- Console Page - Redirected to Debug -->
+
+
+        <!-- Downloads Page -->
+        <div id="page-downloads" class="page">
+            <div id="downloads-container"
+                style="padding: 0; width: 100%; height: 100vh; display: flex; flex-direction: column; overflow-y: auto; justify-content: center;">
+                <div style="margin: auto; width: 100%; display: flex; flex-direction: column;">
+                    <div class="downloads-header">
+                        <div class="downloads-header-content">
+                            <div class="downloads-title-wrapper">
+                                <div class="downloads-title-icon">
+                                    <svg class="icon">
+                                        <use href="#icon-download"></use>
+                                    </svg>
+                                </div>
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                    <h1 class="downloads-title" data-i18n="ui.launcher.web.downloads">Downloads</h1>
+                                    <p class="downloads-subtitle" data-i18n="ui.launcher.web.downloads_subtitle">
+                                        Manage
+                                        model and module downloads</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Global Download Settings Button - Top Left -->
+                    <button id="downloads-global-settings-btn" onclick="openDownloadSettings()"
+                        style="position: absolute; top: 80px; left: 20px; width: 36px; height: 36px; background: rgba(138, 43, 226, 0.15); border: 1px solid rgba(138, 43, 226, 0.3); border-radius: 8px; color: var(--primary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; z-index: 100;"
+                        onmouseover="this.style.background='rgba(138, 43, 226, 0.25)'; this.style.borderColor='rgba(138, 43, 226, 0.5)';"
+                        onmouseout="this.style.background='rgba(138, 43, 226, 0.15)'; this.style.borderColor='rgba(138, 43, 226, 0.3)';">
+                        <svg class="icon" style="width: 20px; height: 20px;">
+                            <use href="#icon-settings"></use>
+                        </svg>
+                    </button>
+
+                    <!-- Test Controls Removed -->
+
+
+                    <div id="downloads-body" class="downloads-layout" style="padding: 0 2rem 2rem 2rem; width: 100%;">
+                        <div class="downloads-card-main" id="downloads-main-card"
+                            style="display: none; position: relative;">
+                            <div class="downloads-card-header">
+                                <div class="downloads-meta-section">
+                                    <div class="downloads-icon-wrapper">
+                                        <svg class="icon downloads-file-icon">
+                                            <use href="#icon-folder"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="downloads-meta-content">
+                                        <div class="downloads-label" id="downloads-active-label"
+                                            data-i18n="ui.launcher.web.downloads_active">Active Download</div>
+                                        <div class="downloads-item-label" id="downloads-item-label"
+                                            data-i18n="ui.launcher.web.no_active_downloads">No active downloads
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="downloads-status" class="downloads-status-pill"
+                                    data-i18n="ui.launcher.web.status_waiting">Waiting</div>
+                            </div>
+
+                            <div class="downloads-progress-section">
+                                <div class="downloads-progress-header">
+                                    <span class="downloads-progress-label"
+                                        data-i18n="ui.launcher.web.progress">Progress</span>
+                                    <span id="downloads-progress-text" class="downloads-progress-percent">0%</span>
+                                </div>
+                                <div class="downloads-bar-outer">
+                                    <div id="downloads-progress-bar" class="downloads-bar-inner"></div>
+                                </div>
+                            </div>
+
+                            <div class="downloads-stats-grid">
+                                <div class="downloads-stat-item">
+                                    <div class="downloads-stat-label">
+                                        <svg class="icon" style="width: 14px; height: 14px;">
+                                            <use href="#icon-download"></use>
+                                        </svg>
+                                        <span data-i18n="ui.launcher.web.downloaded">Downloaded</span>
+                                    </div>
+                                    <div id="downloads-downloaded" class="downloads-stat-value">0 MB</div>
+                                </div>
+                                <div class="downloads-stat-item">
+                                    <div class="downloads-stat-label">
+                                        <svg class="icon" style="width: 14px; height: 14px;">
+                                            <use href="#icon-folder"></use>
+                                        </svg>
+                                        <span data-i18n="ui.launcher.web.total">Total</span>
+                                    </div>
+                                    <div id="downloads-total" class="downloads-stat-value">-- MB</div>
+                                </div>
+                                <div class="downloads-stat-item">
+                                    <div class="downloads-stat-label">
+                                        <svg class="icon" style="width: 14px; height: 14px;">
+                                            <use href="#icon-network"></use>
+                                        </svg>
+                                        <span data-i18n="ui.launcher.web.speed">Speed</span>
+                                    </div>
+                                    <div id="downloads-speed" class="downloads-stat-value">0 KB/s</div>
+                                </div>
+                                <div class="downloads-stat-item">
+                                    <div class="downloads-stat-label">
+                                        <svg class="icon" style="width: 14px; height: 14px;">
+                                            <use href="#icon-clock"></use>
+                                        </svg>
+                                        <span data-i18n="ui.launcher.web.eta_label">ETA</span>
+                                    </div>
+                                    <div id="downloads-eta" class="downloads-stat-value">--</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="downloads-info-card">
+                            <div class="downloads-info-header">
+                                <svg class="icon" style="width: 18px; height: 18px; color: var(--primary);">
+                                    <use href="#icon-info"></use>
+                                </svg>
+                                <span data-i18n="ui.launcher.web.information">Information</span>
+                            </div>
+                            <div class="downloads-info-content">
+                                <p class="downloads-info-text" data-i18n="ui.launcher.web.downloads_hint">
+                                    Загрузки моделей и модулей отображаются здесь в реальном времени. Вы можете
+                                    отслеживать
+                                    прогресс, скорость загрузки и оставшееся время.
+                                </p>
+                                <div class="downloads-empty-state" id="downloads-empty-text">
+                                    <svg class="icon"
+                                        style="width: 48px; height: 48px; opacity: 0.3; margin-bottom: 1rem;">
+                                        <use href="#icon-download"></use>
+                                    </svg>
+                                    <p data-i18n="ui.launcher.web.no_active_downloads">No active downloads yet</p>
+                                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;"
+                                        data-i18n="ui.launcher.web.start_download_hint">Start a module or model
+                                        installation
+                                        to see progress here</p>
+                                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem; font-style: italic; opacity: 0.7;"
+                                        data-i18n="ui.launcher.web.not_downloading">
+                                        Not downloading yet</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modules Page -->
+        <div id="page-modules" class="page">
+            <div
+                style="padding: 2rem 2rem 2rem 2rem; max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 1.5rem; height: 100%; justify-content: center; align-items: center;">
+
+                <div class="empty-state">
+                    <div class="glitch-text" data-text="NO DATA">NO DATA</div>
+                </div>
+
+            </div>
+        </div>
+
+        <script type="module" src="./js/ui/particles.js"></script>
+        <script type="module" src="./js/ui/sound-fx.js"></script>
+        <script type="module" src="./js/ui/sidebar.js"></script>
+        <script type="module" src="./js/ui/monitoring.js"></script>
+
+        <!-- Debug Page (Console) -->
+        <div id="page-debug" class="page">
+            <div class="debug-layout">
+
+                <!-- Page Header (Matches Settings Header) -->
+                <!-- Header removed by user request -->
+
+                <!-- Console Card (Matches Settings Card) -->
+                <div class="console-card">
+                    <!-- Card Header with Tabs and Actions -->
+                    <div class="console-card-header">
+                        <div class="console-tabs-group">
+                            <button class="console-tab active" onclick="setLogView('general', this)">
+                                <span data-i18n="ui.launcher.web.logs_general">General</span>
+                            </button>
+                        </div>
+
+                        <div class="console-actions">
+                            <button class="console-btn" onclick="clearLogs()" title="Clear Console">
+                                <svg class="icon">
+                                    <use href="#icon-trash"></use>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card Content (Logs) -->
+                    <div id="console-container" class="console-logs-area">
+                        <div id="logs">
+                            <div id="logs-general" class="logs-pane active"></div>
+                            <div id="logs-bot" class="logs-pane"></div>
+                            <div id="logs-llm" class="logs-pane"></div>
+                            <div id="logs-sd" class="logs-pane"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- End Debug Page -->
+        </div>
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+            .terminal-tab {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 0.6rem 1rem;
+                background: transparent;
+                border: 1px solid transparent;
+                border-radius: 8px;
+                color: var(--text-secondary);
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-family: inherit;
+                font-size: 0.85rem;
+            }
+
+            .terminal-tab:hover {
+                background: var(--surface);
+                color: var(--text-primary);
+            }
+
+            .terminal-tab.active {
+                background: rgba(138, 43, 226, 0.15);
+                color: var(--primary);
+                border: 1px solid rgba(138, 43, 226, 0.2);
+                box-shadow: 0 2px 8px rgba(138, 43, 226, 0.1);
+            }
+
+            .status-dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--text-muted);
+                opacity: 0.5;
+                transition: all 0.3s;
+            }
+
+            .terminal-tab.active .status-dot {
+                background: var(--success);
+                box-shadow: 0 0 6px var(--success);
+                opacity: 1;
+            }
+
+            .btn-clear-terminal {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                width: 100%;
+                padding: 0.75rem;
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                color: var(--text-secondary);
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .btn-clear-terminal:hover {
+                background: rgba(220, 53, 69, 0.1);
+                border-color: rgba(220, 53, 69, 0.3);
+                color: var(--danger);
+            }
+
+            .terminal-scroll-area {
+                flex: 1;
+                padding: 1rem 1.5rem;
+                overflow-y: auto;
+                font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+                font-size: 0.85rem;
+                line-height: 1.5;
+            }
+
+            /* Custom Scrollbar for Terminal */
+            .terminal-scroll-area::-webkit-scrollbar {
+                width: 10px;
+            }
+
+            .terminal-scroll-area::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 5px;
+                border: 2px solid #0F0F12;
+            }
+
+            .terminal-scroll-area::-webkit-scrollbar-thumb:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            /* #page-debug animation removed to use global main-area settings */
+        </style>
+
+        <!-- Settings Page -->
+        <div id="page-settings" class="page">
+            <div
+                style="padding: 2rem 2rem 2rem 2rem; max-width: 1600px; margin: 0 auto; width: 100%; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 1.5rem;">
+
+                <!-- Header -->
+                <!-- Header removed by user request -->
+
+                <!-- Settings Cards Grid -->
+                <div
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: stretch; margin-top: auto; margin-bottom: auto;">
+
+                    <!-- Taskbar Management -->
+                    <div class="settings-card" data-card-id="taskbar"
+                        style="height: 100%; display: flex; flex-direction: column;">
+                        <div class="card-title"
+                            style="margin-bottom: 1.5rem; padding-bottom: 0; display: flex; align-items: center; gap: 0.75rem;">
+                            <div
+                                style="width: 40px; height: 40px; border-radius: 10px; background: rgba(138, 43, 226, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <svg class="icon" style="width: 20px; height: 20px; color: var(--primary);">
+                                    <use href="#icon-settings"></use>
+                                </svg>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary);"
+                                    data-i18n="ui.launcher.settings.taskbar_title">Управление панелью задач</div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem;"
+                                    data-i18n="ui.launcher.settings.taskbar_desc">Настройка видимости вкладок</div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem; flex: 1;">
+                            <div id="taskbar-toggles" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <!-- Will be populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monitor Management -->
+                    <div class="settings-card" data-card-id="monitoring"
+                        style="height: 100%; display: flex; flex-direction: column;">
+                        <div class="card-title"
+                            style="margin-bottom: 1.5rem; padding-bottom: 0; display: flex; align-items: center; gap: 0.75rem;">
+                            <div
+                                style="width: 40px; height: 40px; border-radius: 10px; background: rgba(138, 43, 226, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <svg class="icon" style="width: 20px; height: 20px; color: var(--primary);">
+                                    <use href="#icon-cpu"></use>
+                                </svg>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary);"
+                                    data-i18n="ui.launcher.settings.monitor_title">Управление мониторингом</div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem;"
+                                    data-i18n="ui.launcher.settings.monitor_desc">Параметры видимости системного
+                                    монитора</div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 0.5rem; flex: 1;">
+                            <div id="monitor-toggles" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <!-- Will be populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Page -->
+        <div id="page-chat" class="page">
+            <div id="chat-container">
+                <div class="chat-header-question" id="chat-header-question" data-i18n="ui.launcher.web.chat_question">
+                    Над чем сосредоточен?</div>
+
+                <div id="chat-messages">
+                    <!-- messages -->
+                </div>
+
+                <!-- Clear chat button (floating, bottom-right) -->
+                <button id="chat-clear-btn" class="chat-clear-btn" onclick="clearChat()" title="Очистить чат">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    <span class="chat-clear-text" data-i18n="ui.launcher.web.chat_clear">Очистить чат</span>
+                </button>
+
+                <div id="chat-compose" style="display:flex; flex-direction:column; gap:0.4rem;">
+                    <div id="chat-attachments" style="display:none; gap:0.5rem; flex-wrap:wrap;"></div>
+                    <div
+                        style="display:flex; gap:0.5rem; align-items:center; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 12px; padding: 0.5rem;">
+                        <input id="chat-file" type="file" multiple style="display:none" />
+                        <button class="btn"
+                            style="background: transparent; color: var(--text-secondary); padding: 0.4rem; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;"
+                            onclick="pickChatFiles()" title="Attach">
+                            <svg class="icon" style="width: 1.1em; height: 1.1em;">
+                                <use href="#icon-plus"></use>
+                            </svg>
+                        </button>
+                        <input id="chat-input" type="text" class="mono" placeholder="Спросите что-нибудь..."
+                            data-i18n-placeholder="ui.launcher.web.chat_placeholder_ask"
+                            style="flex:1; background: transparent; border: none; color: var(--text-primary); padding: 0.4rem 0.6rem; font-size: 0.9rem; outline: none;">
+                        <button id="chat-voice-btn" class="btn"
+                            style="background: transparent; color: var(--text-secondary); padding: 0.4rem; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;"
+                            onclick="toggleVoiceInput()" title="Voice">
+                            <svg class="icon" style="width: 1.1em; height: 1.1em;">
+                                <use href="#icon-mic"></use>
+                            </svg>
+                        </button>
+                        <button id="chat-send" class="btn"
+                            style="background: transparent; color: var(--primary); padding: 0.4rem; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;"
+                            onclick="sendChat()" title="Send">
+                            <svg class="icon" style="width: 1.1em; height: 1.1em;">
+                                <use href="#icon-send"></use>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module Settings Modal -->
+    <div id="module-settings-modal" class="modal-overlay module-settings-overlay" style="display: none;"
+        onclick="if(event.target.id === 'module-settings-modal' || (event.target.classList.contains('module-settings-overlay') && !event.target.closest('.module-settings-modal'))) hideModuleSettingsModal()">
+        <div class="modal module-settings-modal" onclick="event.stopPropagation()">
+            <div class="module-settings-modal-header">
+                <div class="module-settings-modal-title">
+                    <div class="module-settings-modal-icon" id="module-settings-icon">
+                        <svg class="icon" style="width: 24px; height: 24px;">
+                            <use href="#icon-folder"></use>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="module-settings-modal-title-text" id="module-settings-title">Настройки
+                            модуля
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;"
+                            id="module-settings-desc">Загрузка...</div>
+                    </div>
+                </div>
+                <button class="module-settings-modal-close" onclick="hideModuleSettingsModal()" title="Закрыть">
+                    <svg class="icon" style="width: 1.2rem; height: 1.2rem;">
+                        <use href="#icon-close"></use>
+                    </svg>
+                </button>
+            </div>
+            <div class="module-settings-modal-content">
+                <div id="module-settings-loading"
+                    style="display: flex; align-items: center; justify-content: center; padding: 3rem;">
+                    <div style="text-align: center;">
+                        <div class="loading-shimmer"
+                            style="width: 200px; height: 20px; border-radius: 10px; margin: 0 auto 1rem;"></div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">Загрузка настроек...</div>
+                    </div>
+                </div>
+                <div id="module-settings-form-container" style="display: none;">
+                    <form id="module-settings-form">
+                        <div id="module-settings-fields">
+                            <!-- Fields will be generated dynamically -->
+                        </div>
+                    </form>
+                </div>
+                <div id="module-settings-error"
+                    style="display: none; color: var(--danger); padding: 1rem; background: rgba(220, 53, 69, 0.1); border-radius: 10px; border: 1px solid rgba(220, 53, 69, 0.2);">
+                </div>
+            </div>
+            <div class="module-settings-modal-footer" id="module-settings-footer" style="display: none;">
+                <button type="button" class="btn" style="background: var(--bg-light); color: var(--text-secondary);"
+                    onclick="hideModuleSettingsModal()">Отмена</button>
+                <button type="submit" form="module-settings-form" class="btn btn-primary" id="module-settings-save-btn">
+                    <svg class="icon">
+                        <use href="#icon-save"></use>
+                    </svg>
+                    <span>Сохранить</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Language Selection Modal -->
+    <div id="lang-modal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-title" data-i18n="ui.launcher.web.select_language">Select Language</div>
+            <div class="modal-desc" data-i18n="ui.launcher.web.select_language_desc">Choose your preferred
+                language
+                for
+                the interface</div>
+            <div class="lang-selector">
+                <div class="lang-option" onclick="selectLangInModal('en')" data-lang="en">
+                    <div class="lang-option-icon">🇬🇧</div>
+                    <div class="lang-option-name" data-i18n="ui.launcher.language.english">English</div>
+                    <div class="lang-option-native">English</div>
+                </div>
+                <div class="lang-option" onclick="selectLangInModal('ru')" data-lang="ru">
+                    <div class="lang-option-icon">🇷🇺</div>
+                    <div class="lang-option-name" data-i18n="ui.launcher.language.russian">Russian</div>
+                    <div class="lang-option-native">Русский</div>
+                </div>
+                <div class="lang-option" onclick="selectLangInModal('zh')" data-lang="zh">
+                    <div class="lang-option-icon">🇨🇳</div>
+                    <div class="lang-option-name" data-i18n="ui.launcher.language.chinese">Chinese</div>
+                    <div class="lang-option-native">中文</div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="confirmLanguage()"
+                data-i18n="ui.launcher.web.confirm">Confirm</button>
+        </div>
+    </div>
+
+    <!-- SD Installation Modal -->
+    <div id="sd-install-modal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-title" data-i18n="ui.launcher.web.sd_install_title">Stable Diffusion не установлен
+            </div>
+            <div class="modal-message" data-i18n="ui.launcher.web.sd_install_message">Stable Diffusion не
+                установлен.
+                Хотите установить его сейчас? Это может занять некоторое время.</div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-cancel" onclick="hideSdInstallModal()"
+                    data-i18n="ui.launcher.button.cancel">Отмена</button>
+                <button class="modal-btn modal-btn-primary" onclick="confirmSdInstall()"
+                    data-i18n="ui.launcher.button.install">Установить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Download Progress Modal -->
+    <div id="llm-start-modal" class="modal-overlay" style="display: none;"
+        onclick="if(event.target.id === 'llm-start-modal') hideLlmStartModal()">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-title" data-i18n="ui.launcher.web.llm_start_title">Запустить LLM сервер?</div>
+            <div class="modal-message" data-i18n="ui.launcher.web.llm_start_message">LLM сервер не запущен.
+                Запустить
+                сейчас для общения с ботом?</div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-cancel" onclick="hideLlmStartModal()"
+                    data-i18n="ui.launcher.button.cancel">Отмена</button>
+                <button class="modal-btn modal-btn-confirm" onclick="confirmLlmStart()"
+                    data-i18n="ui.launcher.button.start">Запустить</button>
+            </div>
+        </div>
+    </div>
+    <div id="reinstall-sd-modal" class="modal-overlay" style="display: none;"
+        onclick="if(event.target.id === 'reinstall-sd-modal') hideReinstallSdModal()">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-title" data-i18n="ui.launcher.web.reinstall_sd_title">Подтверждение переустановки
+            </div>
+            <div class="modal-message" data-i18n="ui.launcher.web.reinstall_sd_message">
+                Вы уверены, что хотите переустановить Stable Diffusion? Это удалит текущую установку и загрузит
+                её
+                заново. Процесс может занять несколько минут.
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-cancel" onclick="hideReinstallSdModal()"
+                    data-i18n="ui.launcher.button.cancel">Отмена</button>
+                <button class="modal-btn modal-btn-confirm" onclick="confirmReinstallSdAction()"
+                    data-i18n="ui.launcher.button.yes">Да, переустановить</button>
+            </div>
+        </div>
+    </div>
+    <div id="sd-reinstall-progress-modal" class="modal-overlay" style="display: none;"
+        onclick="if(event.target.id === 'sd-reinstall-progress-modal') hideSdReinstallProgress()">
+        <div class="modal" style="max-width: 520px;">
+            <div class="modal-title" data-i18n="ui.launcher.web.reinstall_sd_progress_title">Переустановка
+                Stable
+                Diffusion</div>
+            <div class="modal-message" id="sd-reinstall-status"
+                data-i18n="ui.launcher.web.reinstall_sd_progress_message">
+                Идёт переустановка SD. Пожалуйста, подождите, это может занять несколько минут.
+            </div>
+            <div class="progress-animated" style="margin-top: 0.5rem; margin-bottom: 1rem;">
+                <div class="bar"></div>
+            </div>
+            <div class="helper-text" data-i18n="ui.launcher.web.reinstall_sd_progress_waiting">Не закрывайте
+                окно,
+                пока
+                установка не завершится.</div>
+            <div class="modal-actions" style="margin-top: 1rem;">
+                <button class="modal-btn modal-btn-primary" onclick="hideSdReinstallProgress()"
+                    data-i18n="ui.launcher.button.close">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="model-download-modal" class="modal-overlay" style="display: none;">
+        <div class="modal" style="max-width: 500px; min-width: 400px;">
+            <div class="modal-title" data-i18n="ui.launcher.web.downloading_model">Загрузка модели</div>
+            <div class="modal-message" id="download-model-name" style="margin-bottom: 1rem;">--</div>
+            <div style="margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.85rem;">
+                    <span id="download-progress-text">0%</span>
+                    <span id="download-speed-text">0 KB/s</span>
+                </div>
+                <div style="height: 8px; background: var(--bg-light); border-radius: 4px; overflow: hidden;">
+                    <div id="download-progress-bar"
+                        style="height: 100%; background: var(--primary); width: 0%; transition: width 0.3s;">
+                    </div>
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">
+                    <span id="download-downloaded">0 MB</span>
+                    <span id="download-total">0 MB</span>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-cancel" onclick="cancelModelDownload()"
+                    data-i18n="ui.launcher.button.cancel" id="download-cancel-btn">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module Settings Modal -->
+    <div id="module-settings-modal" class="modal-overlay" style="display: none;"
+        onclick="if(event.target.id === 'module-settings-modal') hideModuleSettingsModal()">
+        <div class="modal"
+            style="max-width: 800px; width: 90%; max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header"
+                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div id="module-settings-icon" class="module-icon" style="width: 32px; height: 32px;">
+                        <svg class="icon">
+                            <use href="#icon-settings"></use>
+                        </svg>
+                    </div>
+                    <div>
+                        <div id="module-settings-title" class="modal-title" style="margin-bottom: 0.25rem;">Settings
+                        </div>
+                        <div id="module-settings-desc" style="font-size: 0.9rem; color: var(--text-secondary);">Module
+                            Configuration</div>
+                    </div>
+                </div>
+                <button class="icon-btn" onclick="hideModuleSettingsModal()">
+                    <svg class="icon" style="width: 20px; height: 20px;">
+                        <use href="#icon-close"></use>
+                    </svg>
+                </button>
+            </div>
+
+            <div id="module-settings-loading"
+                style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem;">
+                <div class="spinner"></div>
+                <div style="margin-top: 1rem; color: var(--text-secondary);">Loading settings...</div>
+            </div>
+
+            <div id="module-settings-error"
+                style="display: none; padding: 1rem; background: rgba(220, 53, 69, 0.1); border-radius: 8px; color: var(--danger); margin-bottom: 1rem;">
+            </div>
+
+            <div id="module-settings-form-container"
+                style="display: none; flex: 1; overflow-y: auto; padding-right: 0.5rem;">
+                <div id="module-settings-fields">
+                    <!-- Fields injected here -->
+                </div>
+            </div>
+
+            <div id="module-settings-footer" class="modal-actions"
+                style="display: none; border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: 1rem;">
+                <button class="modal-btn modal-btn-cancel" onclick="hideModuleSettingsModal()"
+                    data-i18n="ui.launcher.button.close">Close</button>
+                <button class="modal-btn modal-btn-primary" onclick="saveModuleSettings()"
+                    data-i18n="ui.launcher.button.save">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Close Confirmation Modal -->
+    <div id="close-confirm-modal" class="modal-overlay">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-title" data-i18n="ui.launcher.modal.confirm_close_title">Confirm Close</div>
+            <div class="modal-message" data-i18n="ui.launcher.modal.confirm_close_desc">Are you sure you want to close
+                the launcher? All running processes will be stopped.</div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-cancel" onclick="hideCloseConfirmModal()"
+                    data-i18n="ui.launcher.button.cancel">Cancel</button>
+                <button class="modal-btn modal-btn-confirm" onclick="confirmCloseFromModal()"
+                    data-i18n="ui.launcher.button.close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Settings Modal -->
+    <div id="download-settings-overlay" class="modal-overlay" onclick="closeDownloadSettingsOnOverlay(event)">
+        <div class="modal" onclick="event.stopPropagation()" style="max-width: 350px;">
+            <div class="modal-title" style="display: flex; align-items: center; gap: 0.5rem;">
+                <svg class="icon" style="width: 20px; height: 20px; color: var(--primary);">
+                    <use href="#icon-settings"></use>
+                </svg>
+                Настройки загрузки
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                    <span style="color: var(--text-primary); font-weight: 500;">Ограничить скорость</span>
+                    <input type="checkbox" id="download-speed-limit-toggle" onchange="saveDownloadSettings()"
+                        style="width: 40px; height: 22px; appearance: none; background: var(--bg-light); border-radius: 11px; position: relative; cursor: pointer; transition: background 0.2s;"
+                        onclick="this.style.background = this.checked ? 'var(--primary)' : 'var(--bg-light)';">
+                </label>
+
+                <div id="speed-limit-controls" style="opacity: 0.5; pointer-events: none;">
+                    <label
+                        style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">
+                        Макс. скорость: <span id="speed-limit-value"
+                            style="color: var(--primary); font-weight: 600;">50</span> MB/s
+                    </label>
+                    <input type="range" id="download-speed-slider" min="1" max="200" value="50"
+                        oninput="updateSpeedDisplay(this.value); saveDownloadSettings();"
+                        style="width: 100%; height: 6px; appearance: none; background: linear-gradient(to right, var(--primary) 25%, var(--bg-light) 25%); border-radius: 3px; cursor: pointer;">
+                    <div
+                        style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                        <span>1 MB/s</span>
+                        <span>200 MB/s</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <button onclick="closeDownloadSettings()" class="modal-btn modal-btn-primary" style="width: 100%;">
+                    Готово
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./js/core/tauri-bridge.js"></script>
+    <script type="module" src="./js/core/core.js?v=5"></script>
+    <script type="module" src="./js/ui/ui.js?v=5"></script>
+    <script type="module" src="./js/core/i18n.js?v=5"></script>
+    <script type="module" src="./js/features/downloads.js?v=5"></script>
+    <script type="module" src="./js/features/modules.js?v=5"></script>
+    <script type="module" src="./js/features/settings-ui.js?v=5"></script>
+    <script type="module" src="./js/data/settings-data.js?v=5"></script>
+    <script type="module" src="./js/features/debug.js?v=5"></script>
+    <script type="module" src="./js/core/window.js?v=5"></script>
+    <script type="module" src="./js/features/chat.js?v=5"></script>
+</body>
+
+</html>
+```

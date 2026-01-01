@@ -1,0 +1,68 @@
+use std::fs;
+use crate::utils::paths::{FILE_ENV, FILE_GEN_CONFIG};
+use serde_json::Value;
+use crate::errors::AppError;
+use crate::models::AppSettings;
+
+pub fn get_settings() -> Result<AppSettings, AppError> {
+    if !FILE_ENV.exists() {
+        return Ok(AppSettings::default());
+    }
+
+    let content = fs::read_to_string(&*FILE_ENV).map_err(|e| AppError::Io(e))?;
+    let mut settings = AppSettings::default();
+
+    for line in content.lines() {
+        let parts: Vec<&str> = line.split('=').collect();
+        if parts.len() == 2 {
+            let key = parts[0].trim();
+            let value = parts[1].trim();
+
+            match key {
+                "LANGUAGE" => settings.language = value.to_string(),
+                "THEME" => settings.theme = value.to_string(),
+                "USE_GPU" => settings.use_gpu = value.parse().unwrap_or(true),
+                "DEBUG_MODE" => settings.debug_mode = value.parse().unwrap_or(false),
+                _ => {}
+            }
+        }
+    }
+
+    Ok(settings)
+}
+
+pub fn save_settings(settings: AppSettings) -> Result<(), AppError> {
+    let content = format!(
+        "LANGUAGE={}\nTHEME={}\nUSE_GPU={}\nDEBUG_MODE={}\n",
+        settings.language, settings.theme, settings.use_gpu, settings.debug_mode
+    );
+
+    fs::write(&*FILE_ENV, content).map_err(|e| AppError::Io(e))
+}
+
+pub fn get_gen_config() -> Result<Value, AppError> {
+    if !FILE_GEN_CONFIG.exists() {
+        return Ok(serde_json::json!({
+            "llm_temp": 0.7,
+            "llm_ctx": 4096,
+            "sd_steps": 30,
+            "sd_cfg": 6.0,
+            "sd_width": 896,
+            "sd_height": 1152,
+            "sd_sampler": "DPM++ 2M",
+            "sd_scheduler": "Karras"
+        }));
+    }
+
+    let content = fs::read_to_string(&*FILE_GEN_CONFIG).map_err(|e| AppError::Io(e))?;
+    serde_json::from_str(&content).map_err(|e| AppError::Serialization(e))
+}
+
+pub fn save_gen_config(config: Value) -> Result<(), String> {
+    let content = serde_json::to_string_pretty(&config).map_err(|e| e.to_string())?;
+    fs::write(&*FILE_GEN_CONFIG, content).map_err(|e| e.to_string())
+}
+
+pub fn get_language() -> String {
+    get_settings().map(|s| s.language).unwrap_or_else(|_| "ru".to_string())
+}
