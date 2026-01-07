@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки модуля</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Monocraft';
+            src: url('/fonts/Monocraft.otf') format('opentype'),
+                 url('/api/fonts/Monocraft.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
+    <style>
+        :root {
+            --bg-dark: #111015;
+            --bg-med: #1a1920;
+            --bg-light: #26252d;
+            --surface: #31303a;
+            --border-color: #31303a;
+            --primary: #8a2be2;
+            --primary-light: #9d4edd;
+            --primary-dark: #7b2cbf;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --text-muted: #6c757d;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Monocraft', 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .back-btn {
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        .back-btn:hover {
+            background: var(--surface);
+            border-color: var(--primary);
+        }
+        .module-info {
+            background: var(--bg-med);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .module-info-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .module-info-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .settings-form {
+            background: var(--bg-med);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        .form-label .required {
+            color: var(--danger);
+        }
+        .form-help {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+        .form-input {
+            width: 100%;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.1);
+        }
+        .form-input[type="checkbox"] {
+            width: auto;
+            margin-right: 0.5rem;
+        }
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .form-select {
+            width: 100%;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.1);
+        }
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-light);
+        }
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .btn-secondary:hover {
+            background: var(--surface);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--bg-med);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+            max-width: 400px;
+        }
+        .toast.success {
+            border-color: var(--success);
+            background: rgba(40, 167, 69, 0.1);
+        }
+        .toast.error {
+            border-color: var(--danger);
+            background: rgba(220, 53, 69, 0.1);
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+        .error-message {
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid var(--danger);
+            border-radius: 6px;
+            padding: 1rem;
+            color: var(--danger);
+            margin-bottom: 1rem;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+        .settings-category {
+            margin-bottom: 2rem;
+        }
+        .settings-category h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        input[type="range"] {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                Настройки модуля
+            </h1>
+            <button class="back-btn" onclick="goBack()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Назад
+            </button>
+        </div>
+
+        <div id="module-info" class="module-info" style="display: none;">
+            <div class="module-info-title" id="module-name">—</div>
+            <div class="module-info-desc" id="module-description">—</div>
+        </div>
+
+        <div id="error-container"></div>
+
+        <div id="loading" class="loading">
+            Загрузка настроек...
+        </div>
+
+        <div id="settings-form" class="settings-form" style="display: none;">
+            <form id="module-settings-form">
+                <div id="settings-fields">
+                    <!-- Fields will be generated dynamically -->
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="goBack()">Отмена</button>
+                    <button type="submit" class="btn btn-primary" id="save-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                            <polyline points="17 21 17 13 7 13 7 21"/>
+                            <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                        Сохранить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Get module ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const moduleId = urlParams.get('module');
+        
+        if (!moduleId) {
+            showError('Модуль не указан');
+            document.getElementById('loading').style.display = 'none';
+        } else {
+            loadModuleInfo();
+            loadModuleSettings();
+        }
+
+        async function loadModuleInfo() {
+            try {
+                const res = await fetch('/api/modules');
+                const data = await res.json();
+                const modules = data.items || data.available || [];
+                const module = modules.find(m => m.id === moduleId);
+                
+                if (module) {
+                    document.getElementById('module-name').textContent = module.name || moduleId;
+                    document.getElementById('module-description').textContent = module.description || 'Нет описания';
+                    document.getElementById('module-info').style.display = 'block';
+                }
+            } catch (e) {
+                console.error('Failed to load module info', e);
+            }
+        }
+
+        async function loadModuleSettings() {
+            try {
+                // First, load the settings HTML from the module
+                const uiRes = await fetch(`/api/modules/${moduleId}/settings_ui`);
+                if (uiRes.ok) {
+                    const settingsHtml = await uiRes.text();
+                    const container = document.getElementById('settings-fields');
+                    container.innerHTML = settingsHtml;
+                    
+                    // Execute any scripts in the loaded HTML
+                    const scripts = container.querySelectorAll('script');
+                    scripts.forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        Array.from(oldScript.attributes).forEach(attr => {
+                            newScript.setAttribute(attr.name, attr.value);
+                        });
+                        newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                        oldScript.parentNode.replaceChild(newScript, oldScript);
+                    });
+                } else {
+                    // Fallback: generate form from settings data
+                    const res = await fetch(`/api/modules/${moduleId}/settings`);
+                    const data = await res.json();
+                    
+                    if (!data.success) {
+                        showError(data.message || 'Не удалось загрузить настройки');
+                        document.getElementById('loading').style.display = 'none';
+                        return;
+                    }
+
+                    const settings = data.settings || {};
+                    generateSettingsForm(settings);
+                }
+                
+                // Load settings values to populate the form
+                const res = await fetch(`/api/modules/${moduleId}/settings`);
+                const data = await res.json();
+                
+                if (data.success && data.settings) {
+                    populateFormFields(data.settings);
+                }
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('settings-form').style.display = 'block';
+            } catch (e) {
+                showError('Ошибка загрузки настроек: ' + e.message);
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        function populateFormFields(settings) {
+            // Populate all form fields with settings values
+            Object.keys(settings).forEach(key => {
+                const field = document.getElementById(`field-${key}`);
+                if (!field) return;
+                
+                const value = settings[key];
+                
+                if (field.type === 'checkbox') {
+                    field.checked = !!value;
+                } else if (field.type === 'range') {
+                    field.value = value;
+                    // Update the display value if there's a span for it
+                    const valSpan = document.getElementById(`val-${key}`);
+                    if (valSpan) {
+                        const step = parseFloat(field.step) || 0.1;
+                        valSpan.textContent = parseFloat(value).toFixed(step === 0.01 ? 2 : 1);
+                    }
+                } else if (field.type === 'number') {
+                    field.value = value;
+                } else if (field.tagName === 'TEXTAREA') {
+                    if (Array.isArray(value)) {
+                        field.value = value.join('\n');
+                    } else {
+                        field.value = value || '';
+                    }
+                } else if (field.tagName === 'SELECT') {
+                    field.value = value;
+                } else {
+                    field.value = value || '';
+                }
+            });
+        }
+
+        function generateSettingsForm(settings) {
+            const container = document.getElementById('settings-fields');
+            container.innerHTML = '';
+
+            // Try to get schema from module (if available)
+            // For now, generate form from existing settings
+            const fields = Object.keys(settings);
+            
+            if (fields.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">Нет доступных настроек. Настройки будут созданы при первом сохранении.</div>';
+                return;
+            }
+
+            // Group fields by category for better organization
+            const categories = {
+                'prompts': [],
+                'parameters': [],
+                'models': [],
+                'advanced': [],
+                'other': []
+            };
+
+            fields.forEach(key => {
+                if (key.includes('prompt') || key.includes('cliches')) {
+                    categories.prompts.push(key);
+                } else if (key.includes('temp') || key.includes('ctx') || key.includes('steps') || key.includes('cfg') || key.includes('sampler') || key.includes('seed') || key.includes('width') || key.includes('height')) {
+                    categories.parameters.push(key);
+                } else if (key.includes('MODELS') || key.includes('MODEL_URL')) {
+                    categories.models.push(key);
+                } else if (key.includes('ad_') || key.includes('SD_ARGS') || key.includes('SD_MODEL')) {
+                    categories.advanced.push(key);
+                } else {
+                    categories.other.push(key);
+                }
+            });
+
+            // Render by category
+            Object.keys(categories).forEach(category => {
+                const categoryFields = categories[category];
+                if (categoryFields.length === 0) return;
+
+                const categoryTitle = {
+                    'prompts': 'Промпты',
+                    'parameters': 'Параметры',
+                    'models': 'Модели',
+                    'advanced': 'Дополнительно',
+                    'other': 'Прочее'
+                }[category] || 'Настройки';
+
+                container.innerHTML += `<div class="settings-category" style="margin-bottom: 2rem;"><h3 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">${categoryTitle}</h3></div>`;
+
+                categoryFields.forEach(key => {
+                    const value = settings[key];
+                    const fieldType = typeof value;
+                    
+                    let fieldHtml = '';
+                    
+                    if (fieldType === 'boolean') {
+                        fieldHtml = `
+                            <div class="form-group">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="field-${key}" name="${key}" ${value ? 'checked' : ''} class="form-input">
+                                    <label for="field-${key}" class="form-label">${formatKey(key)}</label>
+                                </div>
+                            </div>
+                        `;
+                    } else if (fieldType === 'number') {
+                        // Check if it's a range field
+                        const isRange = key.includes('temp') || key.includes('cfg') || key.includes('conf');
+                        if (isRange) {
+                            const min = key.includes('conf') ? 0 : (key.includes('temp') ? 0 : 1);
+                            const max = key.includes('conf') ? 1 : (key.includes('temp') ? 2 : 20);
+                            const step = key.includes('conf') ? 0.01 : (key.includes('temp') ? 0.1 : 0.1);
+                            fieldHtml = `
+                                <div class="form-group">
+                                    <label for="field-${key}" class="form-label">${formatKey(key)}: <span id="val-${key}">${value}</span></label>
+                                    <input type="range" id="field-${key}" name="${key}" min="${min}" max="${max}" step="${step}" value="${value}" class="form-input" oninput="document.getElementById('val-${key}').textContent = parseFloat(this.value).toFixed(${step === 0.01 ? 2 : 1})">
+                                </div>
+                            `;
+                        } else {
+                            fieldHtml = `
+                                <div class="form-group">
+                                    <label for="field-${key}" class="form-label">${formatKey(key)}</label>
+                                    <input type="number" id="field-${key}" name="${key}" value="${value}" class="form-input">
+                                </div>
+                            `;
+                        }
+                    } else if (Array.isArray(value)) {
+                        fieldHtml = `
+                            <div class="form-group">
+                                <label for="field-${key}" class="form-label">${formatKey(key)}</label>
+                                <textarea id="field-${key}" name="${key}" class="form-input form-textarea">${value.join('\n')}</textarea>
+                                <div class="form-help">Каждое значение на новой строке</div>
+                            </div>
+                        `;
+                    } else {
+                        // String or object (stringified)
+                        const displayValue = typeof value === 'object' ? JSON.stringify(value, null, 2) : (value || '');
+                        const isLong = displayValue && displayValue.length > 100;
+                        const isPrompt = key.includes('prompt') || key.includes('cliches');
+                        fieldHtml = `
+                            <div class="form-group">
+                                <label for="field-${key}" class="form-label">${formatKey(key)}</label>
+                                ${isLong || isPrompt
+                                    ? `<textarea id="field-${key}" name="${key}" class="form-input form-textarea" style="min-height: ${isPrompt ? '150px' : '100px'}; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9rem;">${escapeHtml(displayValue)}</textarea>`
+                                    : `<input type="text" id="field-${key}" name="${key}" value="${escapeHtml(displayValue)}" class="form-input">`
+                                }
+                            </div>
+                        `;
+                    }
+                    
+                    container.innerHTML += fieldHtml;
+                });
+            });
+        }
+
+        function formatKey(key) {
+            return key
+                .replace(/_/g, ' ')
+                .replace(/([A-Z])/g, ' $1')
+                .replace(/^./, str => str.toUpperCase())
+                .trim();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showError(message) {
+            const container = document.getElementById('error-container');
+            container.innerHTML = `<div class="error-message">${escapeHtml(message)}</div>`;
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        document.getElementById('module-settings-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const settings = {};
+            
+            // Collect form data
+            for (const [key, value] of formData.entries()) {
+                const field = document.getElementById(`field-${key}`);
+                
+                if (field.type === 'checkbox') {
+                    settings[key] = field.checked;
+                } else if (field.type === 'number') {
+                    settings[key] = parseFloat(value) || 0;
+                } else {
+                    // Check if it's a multiline string (array)
+                    if (value.includes('\n')) {
+                        settings[key] = value.split('\n').filter(v => v.trim());
+                    } else {
+                        settings[key] = value;
+                    }
+                }
+            }
+            
+            // Save settings
+            const saveBtn = document.getElementById('save-btn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Сохранение...';
+            
+            try {
+                const res = await fetch(`/api/modules/${moduleId}/settings`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(settings)
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    showToast('Настройки сохранены', 'success');
+                    setTimeout(() => goBack(), 1000);
+                } else {
+                    showToast(data.message || 'Ошибка сохранения', 'error');
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                            <polyline points="17 21 17 13 7 13 7 21"/>
+                            <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                        Сохранить
+                    `;
+                }
+            } catch (e) {
+                showToast('Ошибка: ' + e.message, 'error');
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/>
+                        <polyline points="7 3 7 8 15 8"/>
+                    </svg>
+                    Сохранить
+                `;
+            }
+        });
+
+        function goBack() {
+            // Return to modules page instead of main page
+            // Use hash to navigate to modules page
+            if (window.parent && window.parent !== window) {
+                // If in iframe, try to communicate with parent
+                try {
+                    window.parent.postMessage({ type: 'navigate', page: 'modules' }, '*');
+                } catch (e) {
+                    window.location.href = '/?page=modules';
+                }
+            } else {
+                window.location.href = '/?page=modules';
+            }
+        }
+    </script>
+</body>
+</html>
+

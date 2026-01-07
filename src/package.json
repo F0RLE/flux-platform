@@ -1,0 +1,23 @@
+{
+  "name": "flux-platform-frontend",
+  "version": "0.1.0",
+  "description": "Flux Platform Frontend",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "clean": "rmdir /s /q dist 2>nul & echo Cleaned",
+    "tauri:dev": "taskkill /F /IM \"Flux Platform.exe\" /T >nul 2>nul & cd .. && tauri dev --target x86_64-pc-windows-msvc",
+    "tauri:build": "cd .. && tauri build",
+    "release": "npm run build && cd .. && tauri build --release"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.9.6",
+    "@tauri-apps/api": "^2.9.1",
+    "@types/node": "^25.0.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  }
+}
+

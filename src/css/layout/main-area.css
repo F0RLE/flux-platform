@@ -1,0 +1,110 @@
+﻿/* --- MAIN AREA --- */
+#main-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    max-height: 100%;
+}
+
+.page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none !important;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    padding-top: var(--content-padding-top);
+    /* Space for Glass Header */
+    box-sizing: border-box;
+    /* Include padding in height/width */
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, filter 0.3s ease;
+    filter: blur(0px);
+    transform: translateZ(0);
+    background: transparent;
+    will-change: opacity;
+}
+
+.page.active {
+    display: flex !important;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 10;
+    animation: pageFadeIn 0.3s ease forwards;
+}
+
+@keyframes pageFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.page.leaving {
+    display: flex !important;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 5;
+    animation: pageFadeOut 0.2s ease forwards;
+}
+
+@keyframes pageFadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+/* Exception for Chat Page - Keep Slide Animation */
+#page-chat {
+    transform: translateY(100px);
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#page-chat.active {
+    transform: translateY(0);
+    animation: chatPageEnter 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+#page-chat.leaving {
+    transform: translateY(100px);
+    animation: chatPageLeave 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes chatPageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes chatPageLeave {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+}
