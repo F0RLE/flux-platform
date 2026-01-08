@@ -110,24 +110,7 @@ async function loadSettings() {
         const res = await fetch('/api/settings');
         const data = await res.json();
 
-        // Check modules installation state to enable/disable settings sections
-        try {
-            const modsPayload = await window.fetchModulesCached();
-            if (modsPayload) {
-                const items = modsPayload.items || modsPayload.modules || [];
-                const llmMod = items.find(m => m.id === 'llm');
-                const sdMod = items.find(m => m.id === 'sd');
-                const llmInstalled = !llmMod || llmMod.installed !== false;
-                const sdInstalled = !sdMod || sdMod.installed !== false;
 
-                const llmOverlay = document.getElementById('llm-settings-disabled-overlay');
-                const sdOverlay = document.getElementById('sd-settings-disabled-overlay');
-                if (llmOverlay) llmOverlay.style.display = llmInstalled ? 'none' : 'flex';
-                if (sdOverlay) sdOverlay.style.display = sdInstalled ? 'none' : 'flex';
-            }
-        } catch (e) {
-            console.warn('[Settings] modules fetch failed', e);
-        }
 
         // Helper to safely call optional functions
         const safeCall = (fnName) => {

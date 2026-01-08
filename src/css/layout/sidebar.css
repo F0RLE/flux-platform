@@ -14,36 +14,17 @@
     overflow-x: hidden;
     /* РґР°С‘Рј РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РїРµСЂРµС‚Р°СЃРєРёРІР°С‚СЊ РѕРєРЅРѕ Р·Р° СЃРІРѕР±РѕРґРЅС‹Рµ РјРµСЃС‚Р° СЃР°Р№РґР±Р°СЂР° РІ Electron */
     -webkit-app-region: drag;
+    /* Smooth width transition for collapse/expand */
+    transition: width 0.3s var(--ease-smooth), filter 0.3s ease;
 }
 
-body.snapping #sidebar {
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+/* body.snapping #sidebar rule removed as it is now redundant */
 
 #sidebar.dragging {
     cursor: move;
 }
 
-#sidebar-drag-handle {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 4px;
-    height: 100%;
-    cursor: col-resize;
-    z-index: 10;
-    background: transparent;
-    transition: background 0.2s;
-    -webkit-app-region: no-drag;
-}
-
-#sidebar-drag-handle:hover {
-    background: rgba(138, 43, 226, 0.5);
-}
-
-#sidebar-drag-handle.dragging {
-    background: var(--primary);
-}
+/* Old drag handle rule removed */
 
 .logo-area {
     display: flex;
@@ -56,18 +37,7 @@ body.snapping #sidebar {
     justify-content: center;
     padding-top: 0.5rem;
     cursor: pointer;
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s;
     border-radius: 12px;
-}
-
-.logo-area:hover {
-    background: rgba(255, 255, 255, 0.03);
-    transform: scale(1.02);
-}
-
-.logo-area:active {
-    transform: scale(0.95);
-    opacity: 0.8;
 }
 
 .logo-icon-wrapper {
@@ -76,6 +46,7 @@ body.snapping #sidebar {
     gap: 10px;
     justify-content: center;
     width: 100%;
+    cursor: pointer;
 }
 
 .status-under-icon {
@@ -98,7 +69,6 @@ body.snapping #sidebar {
 }
 
 @keyframes pulse {
-
     0%,
     100% {
         opacity: 1;
@@ -144,6 +114,7 @@ body.snapping #sidebar {
     width: 40px;
     height: 40px;
     margin: 0 auto;
+    cursor: pointer;
     /* animation: fadeIn 0.3s ease; Removed, logic in #sidebar.collapsed rule if needed, or keeping it but adding inner svg anim */
 }
 
@@ -157,6 +128,13 @@ body.snapping #sidebar {
     filter: drop-shadow(0 0 8px rgba(138, 43, 226, 0.5));
     /* Add animation here for when it becomes visible */
     animation: logoPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    cursor: pointer;
+    pointer-events: none;
+}
+
+.sidebar-logo-icon:active svg {
+    transform: scale(0.9);
+    transition: transform 0.1s;
 }
 
 @keyframes logoPopIn {
@@ -177,18 +155,27 @@ body.snapping #sidebar {
     overflow: hidden;
     transition: opacity 0.2s, max-height 0.2s;
     text-align: center;
+    cursor: pointer;
 }
 
 .app-title {
     font-weight: 700;
     font-size: 1.5rem;
-    background: linear-gradient(90deg, #8a2be2, #9d4edd, #c77dff, #9d4edd, #8a2be2);
+    background: linear-gradient(
+        90deg,
+        #8a2be2,
+        #9d4edd,
+        #c77dff,
+        #9d4edd,
+        #8a2be2
+    );
     background-size: 200% 100%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: shimmer 12s linear infinite;
     margin-top: 0.5rem;
+    cursor: pointer;
+    pointer-events: none;
 }
 
 /* Collapsed Sidebar State */
@@ -197,9 +184,7 @@ body.snapping #sidebar {
     padding: 1rem 0.5rem;
 }
 
-#sidebar.collapsed .sidebar-title-wrapper,
 #sidebar.collapsed .status-under-icon,
-#sidebar.collapsed .app-title,
 #sidebar.collapsed .nav-btn span,
 #sidebar.collapsed .nav-section-title,
 #sidebar.collapsed .sysmon-label-text,
@@ -209,6 +194,20 @@ body.snapping #sidebar {
 #sidebar.collapsed #system-monitor,
 #sidebar.collapsed #sidebar-footer {
     display: none !important;
+}
+
+#sidebar.collapsed .sidebar-title-wrapper {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    max-height: 0;
+    margin: 0;
+}
+
+#sidebar.collapsed .app-title {
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 
 #sidebar.collapsed .sidebar-logo-icon {
@@ -229,6 +228,11 @@ body.snapping #sidebar {
     margin-right: 0;
     width: 32px;
     height: 32px;
+}
+
+#sidebar.collapsed .nav-btn:hover {
+    transform: none;
+    background: rgba(138, 43, 226, 0.2); /* Optional: keep the background change but no movement */
 }
 
 #sidebar.collapsed .sidebar-lang-switcher {
@@ -284,19 +288,7 @@ body.snapping #sidebar {
     }
 }
 
-@keyframes shimmer {
-    0% {
-        background-position: 0% 50%;
-    }
 
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
-}
 
 .app-subtitle {
     font-size: 0.75rem;
@@ -333,21 +325,24 @@ body.snapping #sidebar {
     padding: 0.75rem 0.85rem;
     padding-left: 2.5rem;
     /* Space for icon */
+    /* Space for icon */
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.05);
     color: #a0a0b0;
     font-size: 16px;
     font-weight: 500;
-    cursor: pointer;
+    cursor: pointer !important;
     border-radius: 10px;
     transition: all 0.25s var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1));
     margin-bottom: 0.5rem;
-    font-family: 'Monocraft', 'Inter', 'Segoe UI', sans-serif;
+    font-family: "Monocraft", "Inter", "Segoe UI", sans-serif;
     -webkit-app-region: no-drag;
     position: relative;
     overflow: hidden;
     /* Transition for hide/show animation */
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease, margin 0.5s ease, padding 0.5s ease;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease,
+        margin 0.5s ease, padding 0.5s ease;
     max-height: 40px;
     /* Approximate height of nav btn */
 }
@@ -392,7 +387,7 @@ body.snapping #sidebar {
 }
 
 .nav-btn.active::after {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     top: 50%;
@@ -407,7 +402,6 @@ body.snapping #sidebar {
 }
 
 @keyframes navIndicatorPulse {
-
     0%,
     100% {
         box-shadow: 0 0 8px rgba(138, 43, 226, 0.5);
@@ -423,7 +417,8 @@ body.snapping #sidebar {
     left: 0.75rem;
     width: 22px;
     height: 22px;
-    transition: transform 0.25s var(--ease-bounce, cubic-bezier(0.34, 1.56, 0.64, 1));
+    transition: transform 0.25s
+        var(--ease-bounce, cubic-bezier(0.34, 1.56, 0.64, 1));
     flex-shrink: 0;
 }
 
@@ -434,6 +429,13 @@ body.snapping #sidebar {
 .nav-btn.active .icon {
     transform: scale(1.1);
     filter: drop-shadow(0 0 4px rgba(138, 43, 226, 0.5));
+}
+
+.nav-btn svg,
+.nav-btn span,
+.nav-btn .icon {
+    cursor: pointer;
+    pointer-events: none; /* Let clicks pass through to the button */
 }
 
 .modules-title-icon {
@@ -456,7 +458,7 @@ body.snapping #sidebar {
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
     padding: 12px;
-    font-family: 'Monocraft', 'Inter', 'Segoe UI', sans-serif;
+    font-family: "Monocraft", "Inter", "Segoe UI", sans-serif;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
 }
 
@@ -468,15 +470,19 @@ body.snapping #sidebar {
 }
 
 /* Sidebar Drag Handle */
+/* Sidebar Drag Handle - Global Position */
 #sidebar-drag-handle {
     position: absolute;
     top: 0;
-    right: -4px;
-    width: 8px;
+    left: var(--sidebar-width, 280px);
+    width: 16px;
+    /* Center it: 8px overlap on sidebar, 8px on main content */
+    margin-left: -8px;
     height: 100%;
     cursor: col-resize;
     z-index: 1001;
-    transition: background 0.2s;
+    transition: left 0.3s var(--ease-smooth), background 0.2s;
+    /* Ensure it moves smoothly with sidebar */
 }
 
 #sidebar-drag-handle:hover,
@@ -519,7 +525,7 @@ body.snapping #sidebar {
     transition: background 0.2s;
     border-radius: 8px;
     margin-bottom: 0.25rem;
-    font-family: 'Monocraft', 'Inter', 'Segoe UI', sans-serif;
+    font-family: "Monocraft", "Inter", "Segoe UI", sans-serif;
     -webkit-app-region: no-drag;
 }
 
@@ -624,7 +630,6 @@ body.snapping #sidebar {
     width: 14px;
     height: 14px;
 }
-
 
 #sidebar-footer {
     margin-top: auto;

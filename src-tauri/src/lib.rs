@@ -19,6 +19,13 @@ pub fn run() {
     // Initialize logging
     crate::services::logs::init_global_logger().ok();
 
+    // Set WebView2 user data folder to Temp to avoid creating it in AppData/Local
+    // This makes it easier to swap/remove Tauri without leaving residue in standard user folders
+    if let Ok(temp_dir) = std::env::temp_dir().canonicalize() {
+        let webview_data_dir = temp_dir.join("com.flux.platform");
+        std::env::set_var("WEBVIEW2_USER_DATA_FOLDER", webview_data_dir);
+    }
+
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
@@ -40,6 +47,7 @@ pub fn run() {
             window::maximize_window,
             window::close_window,
             window::show_window,
+            window::hide_window,
             translations::get_translations,
             // License commands
             license::get_license_status,
@@ -113,10 +121,11 @@ pub fn run() {
 /// Setup system tray icon with menu
 fn setup_system_tray(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     // Create menu items
+    let show_item = MenuItem::with_id(app, "show", "Открыть", true, None::<&str>)?;
     let quit_item = MenuItem::with_id(app, "quit", "Выход", true, None::<&str>)?;
 
     // Create menu
-    let menu = Menu::with_items(app, &[&quit_item])?;
+    let menu = Menu::with_items(app, &[&show_item, &quit_item])?;
 
     // Build tray icon
     let _tray = TrayIconBuilder::new()
@@ -125,10 +134,20 @@ fn setup_system_tray(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>>
         .menu(&menu)
         .show_menu_on_left_click(false)
         .on_menu_event(|app, event| {
-            if event.id.as_ref() == "quit" {
-                // Graceful shutdown
-                services::system_monitor::stop_monitoring();
-                app.exit(0);
+            match event.id.as_ref() {
+                "show" => {
+                    if let Some(window) = app.get_webview_window("main") {
+                        let _ = window.unminimize();
+                        let _ = window.show();
+                        let _ = window.set_focus();
+                    }
+                }
+                "quit" => {
+                    // Graceful shutdown
+                    services::system_monitor::stop_monitoring();
+                    app.exit(0);
+                }
+                _ => {}
             }
         })
         .on_tray_icon_event(|tray, event| {

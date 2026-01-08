@@ -150,41 +150,22 @@ window.updateMaximizeIcon = function (isMaximized) {
         maximizeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h4V4m12 4h-4V4m4 12h-4v4M4 16h4v4"/>';
     }
 };
-
-window.showCloseConfirmModal = function () {
-    const modal = document.getElementById('close-confirm-modal');
-    if (!modal) return;
-
-    // Add blur and show modal
-    document.body.classList.add('launcher-blur');
-    modal.classList.add('show');
-
-    // Simple click outside to close
-    modal.onclick = function (e) {
-        if (e.target === modal) {
-            hideCloseConfirmModal();
+// Hide window to tray (instead of closing)
+window.hideToTray = async function () {
+    if (window.__TAURI__) {
+        try {
+            await window.__TAURI__.core.invoke('hide_window');
+        } catch (e) {
+            console.error("Failed to hide to tray:", e);
         }
-    };
+    } else {
+        // Fallback for non-Tauri: just minimize
+        window.minimizeWindow();
+    }
 };
 
-window.hideCloseConfirmModal = function () {
-    const modal = document.getElementById('close-confirm-modal');
-    if (!modal) return;
-    document.body.classList.remove('launcher-blur');
-    modal.classList.remove('show');
-};
-
-
-window.confirmCloseFromModal = function () {
-    try { hideCloseConfirmModal(); } catch (e) { }
-    // Proceed with actual shutdown flow
-    confirmClose();
-};
-
+// Force close (used by tray menu)
 window.confirmClose = async function () {
-    isClosing = true;
-
-    // Use backend command to close (exit(0))
     if (window.__TAURI__) {
         try {
             await window.__TAURI__.core.invoke('close_window');
@@ -192,7 +173,6 @@ window.confirmClose = async function () {
             console.error("Failed to invoke close_window:", e);
         }
     } else {
-        // Mock / Web fallback
         try {
             window.close();
             setTimeout(() => { if (!document.hidden) window.location.href = 'about:blank'; }, 100);
@@ -347,6 +327,7 @@ window.hideSplashScreen = function () {
         splash.style.transition = 'opacity 0.5s ease';
         setTimeout(() => {
             splash.style.display = 'none';
+            document.body.style.overflow = ''; // Restore scrollbar
         }, 500);
     }
 
@@ -390,7 +371,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         initEmojiFlags();
         updateLangButtons();
 
-        // Hide Splash Screen after 1.5 seconds (User requested)
+        // Hide Splash Screen after 1.5 seconds (User requested slower load)
         setTimeout(window.hideSplashScreen, 1500);
 
         // Start Loops

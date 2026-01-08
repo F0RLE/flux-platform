@@ -105,5 +105,8 @@
   "ui.launcher.web.chat_question_4": "Время быть продуктивным",
   "ui.launcher.web.chat_question_5": "Система готова. Ожидаю инструкций",
   "ui.launcher.button.cancel": "Отмена",
-  "ui.launcher.button.close": "Закрыть"
+  "ui.launcher.button.close": "Закрыть",
+  "ui.launcher.web.chat_no_one_heard": "Вас никто не услышал",
+  "ui.launcher.web.close_confirm_title": "Выход",
+  "ui.launcher.web.close_confirm_message": "Вы уверены, что хотите закрыть приложение?"
 }

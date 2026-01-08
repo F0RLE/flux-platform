@@ -14,9 +14,10 @@ function initSidebar() {
     // Restore or create drag handle
     let dragHandle = document.getElementById('sidebar-drag-handle');
     if (!dragHandle) {
+        // Fallback: create and append to body if missing
         dragHandle = document.createElement('div');
         dragHandle.id = 'sidebar-drag-handle';
-        sidebar.appendChild(dragHandle);
+        document.body.appendChild(dragHandle);
     }
 
     // Restore saved width from UI state
@@ -71,6 +72,12 @@ function initSidebar() {
 
         // Add cursor pointer for UX
         logoArea.style.cursor = 'pointer';
+
+        // FOUC Fix: Remove inline display:none that was added to prevent startup flash
+        const logoIcon = logoArea.querySelector('.sidebar-logo-icon');
+        if (logoIcon) {
+            logoIcon.style.display = '';
+        }
     }
 }
 

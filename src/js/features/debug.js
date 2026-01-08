@@ -263,8 +263,8 @@ if (document.readyState === 'loading') {
 window.pollLogs = pollLogs;
 
 let lastTimestamp = 0, allLogs = [];
-let currentLogView = 'general'; // general | bot | llm | sd
-const LOG_PREFIX_MAP = { "BOT": "🤖", "LLM": "🧠", "SD": "🎨", "SYSTEM": "⚙️" };
+let currentLogView = 'general';
+const LOG_PREFIX_MAP = { "SYSTEM": "⚙️" };
 
 function normSource(source) {
     const raw = String(source || '').trim();
@@ -276,22 +276,16 @@ function getLogPrefix(sourceNorm) {
 }
 
 function logMatchesView(log, view) {
-    const s = normSource(log && log.source);
-    if (!s) return false;
-    if (view === 'bot') return s === 'BOT';
-    if (view === 'llm') return s === 'LLM';
-    if (view === 'sd') return s === 'SD';
-    // general: everything else (SYSTEM, DebugServer, etc.)
-    return s !== 'BOT' && s !== 'LLM' && s !== 'SD';
+    // legacy support: treat everything as general
+    return true;
 }
 
 function getActiveLogsPane() {
-    const id = `logs-${currentLogView}`;
-    return document.getElementById(id) || document.getElementById('logs-general');
+    return document.getElementById('logs-general');
 }
 
 window.setLogView = function (view, btn) {
-    currentLogView = view || 'general';
+    currentLogView = 'general';
     document.querySelectorAll('.terminal-tab').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
     document.querySelectorAll('.logs-pane').forEach(p => p.classList.remove('active'));
@@ -302,18 +296,13 @@ window.setLogView = function (view, btn) {
 
 async function clearBackendLogs() {
     try {
-        // Best-effort; even if it fails we still clear UI
         await fetch('/api/logs/clear', { method: 'POST' });
-    } catch (e) {
-        // silent
-    }
+    } catch (e) { }
 }
 
 window.clearLogs = async function (showMessage = true) {
-    ['logs-general', 'logs-bot', 'logs-llm', 'logs-sd'].forEach(id => {
-        const pane = document.getElementById(id);
-        if (pane) pane.innerHTML = '';
-    });
+    const pane = document.getElementById('logs-general');
+    if (pane) pane.innerHTML = '';
     allLogs = [];
     lastTimestamp = 0;
     await clearBackendLogs();
@@ -338,9 +327,7 @@ function renderLogs(clear = false) {
     if (!container) return;
     if (clear) container.innerHTML = '';
 
-    const logsToShow = allLogs
-        .filter(l => logMatchesView(l, currentLogView))
-        .sort((a, b) => a.timestamp - b.timestamp);
+    const logsToShow = allLogs.sort((a, b) => a.timestamp - b.timestamp);
 
     const fragment = document.createDocumentFragment();
     logsToShow.forEach(log => fragment.appendChild(createLogEl(log)));
@@ -376,7 +363,6 @@ async function pollLogs() {
                 pane.scrollTop = shouldScroll ? pane.scrollHeight : prevScrollTop;
             }
             if (allLogs.length > 2000) {
-                // Keep only last N logs to avoid memory issues
                 allLogs = allLogs.slice(-1000);
                 renderLogs(true);
             }
@@ -388,147 +374,8 @@ async function pollLogs() {
 }
 
 window.updateState = async function () {
-    try {
-        const res = await fetch('/api/state');
-        const text = await res.text();
-        const data = window.safeJsonParse(text, {});
-        const serviceMap = {
-            bot: t('ui.launcher.service.telegram_bot', 'Telegram Bot'),
-            llm: t('ui.launcher.service.llm_server', 'Ollama'),
-            sd: t('ui.launcher.service.stable_diffusion', 'Stable Diffusion')
-        };
-        const list = document.getElementById('services-list');
-        if (!list) return; // Exit if list doesn't exist
-
-        // IMPORTANT: Do not rebuild the whole list each poll.
-        // Rebuilding causes DOM nodes to be replaced every 2s, which breaks clicks and UX.
-        let allRunning = true;
-        let anyRunning = false;
-        Object.entries(serviceMap).forEach(([key, name]) => {
-            const status = data.services[key] || 'stopped';
-            const isRun = status === 'running';
-            if (isRun) anyRunning = true;
-            if (status !== 'running') allRunning = false;
-            const buttonTitle = isRun ? t('ui.launcher.button.stop', 'Остановить') + ' ' + name :
-                t('ui.launcher.button.start', 'Запустить') + ' ' + name;
-
-            let row = list.querySelector(`.service-row[data-service="${key}"]`);
-            if (!row) {
-                row = document.createElement('div');
-                row.className = 'service-row';
-                row.setAttribute('data-service', key);
-                row.innerHTML = `
-                            <div class="service-info">
-                                <div class="status-dot"></div>
-                                <div class="service-name"></div>
-                            </div>
-                            <div class="service-actions" style="display: flex; gap: 0.25rem;"></div>
-                        `;
-                list.appendChild(row);
-            }
-
-            // Status + name
-            row.setAttribute('data-status', status);
-            const nameEl = row.querySelector('.service-name');
-            if (nameEl) nameEl.textContent = name;
-            const dotEl = row.querySelector('.status-dot');
-            if (dotEl) dotEl.className = `status-dot ${status}`;
-
-            // Actions
-            const actions = row.querySelector('.service-actions');
-            if (actions) {
-                // Restart button (only when running)
-                let restartBtn = actions.querySelector('.btn-toggle-service.restart');
-                if (isRun) {
-                    if (!restartBtn) {
-                        restartBtn = document.createElement('button');
-                        restartBtn.className = 'btn-toggle-service restart';
-                        restartBtn.style.background = 'var(--warning)';
-                        restartBtn.style.opacity = '0.7';
-                        restartBtn.innerHTML = `<svg class="icon" style="transform: rotate(180deg);"><use href="#icon-start"></use></svg>`;
-                        restartBtn.addEventListener('click', () => control('restart', key));
-                        actions.appendChild(restartBtn);
-                    }
-                    restartBtn.title = `${t('ui.launcher.button.restart', 'Перезапустить')} ${name}`;
-                } else if (restartBtn) {
-                    restartBtn.remove();
-                }
-
-                // Main toggle button
-                let toggleBtn = actions.querySelector('.btn-toggle-service.main');
-                if (!toggleBtn) {
-                    toggleBtn = document.createElement('button');
-                    toggleBtn.className = 'btn-toggle-service main';
-                    toggleBtn.innerHTML = `<svg class="icon"><use href="#icon-start"></use></svg>`;
-                    actions.appendChild(toggleBtn);
-                }
-                toggleBtn.classList.toggle('stop', isRun);
-                toggleBtn.title = buttonTitle;
-                toggleBtn.onclick = () => {
-                    // If SD is not installed, show install prompt instead of failing start.
-                    if (!isRun && key === 'sd') {
-                        startSdWithInstallCheck();
-                        return;
-                    }
-                    control(isRun ? 'stop' : 'start', key);
-                };
-                const useEl = toggleBtn.querySelector('use');
-                if (useEl) useEl.setAttribute('href', `#icon-${isRun ? 'stop' : 'start'}`);
-            }
-        });
-
-        // Update status indicator (prefer: Error > Online > Offline)
-        const statusIndicator = document.getElementById('status-indicator');
-        const statusDot = document.querySelector('.status-indicator');
-        if (statusIndicator && data.services) {
-            // Only update if we have valid service data
-            const hasValidData = Object.keys(data.services).length > 0;
-            if (hasValidData) {
-                const statuses = Object.values(data.services || {});
-                const anyError = statuses.includes('error');
-                const anyRun2 = statuses.includes('running');
-                if (anyError) {
-                    statusIndicator.style.color = 'var(--danger)';
-                    statusIndicator.textContent = t('ui.launcher.status.error', 'Ошибка');
-                } else if (anyRun2) {
-                    statusIndicator.style.color = 'var(--success)';
-                    statusIndicator.textContent = t('ui.launcher.web.status_online', 'Online');
-                } else {
-                    statusIndicator.style.color = 'var(--text-muted)';
-                    statusIndicator.textContent = t('ui.launcher.web.status_offline', 'Offline');
-                }
-            }
-        }
-        if (statusDot && data.services && Object.keys(data.services).length > 0) {
-            const statuses = Object.values(data.services || {});
-            const anyError = statuses.includes('error');
-            const anyRun2 = statuses.includes('running');
-            statusDot.style.background = anyError ? 'var(--danger)' : (anyRun2 ? 'var(--success)' : 'var(--text-muted)');
-        }
-    } catch (e) {
-        const statusIndicator = document.getElementById('status-indicator');
-        if (statusIndicator) {
-            statusIndicator.style.color = 'var(--danger)';
-        }
-    }
-}
-
-async function startSdWithInstallCheck() {
-    try {
-        const res = await fetch('/api/check_sd_installed');
-        if (res.ok) {
-            const data = await res.json();
-            if (data && data.installed === false) {
-                // Explicit user action: show modal even if previously dismissed.
-                showSdInstallModal();
-                return;
-            }
-        }
-    } catch (e) {
-        // ignore and fall back to start attempt
-    }
-    control('start', 'sd');
-}
+    // Legacy service monitoring removed for now
+};
 
 window.toggleLangDropdown = function (page = 'console') {
     const menuId = `lang-dropdown-menu-${page}`;

@@ -1,4 +1,9 @@
-﻿let launcherLogBuffer = [];
+﻿// CSS Imports for Vite Caching
+import '../../css/main.css';
+import '../../css/inline-body-styles.css';
+import '../../css/styles-sysmon.css';
+
+let launcherLogBuffer = [];
 let launcherLogFlushTimeout = null;
 
 function launcherLog(level, message) {
@@ -129,12 +134,7 @@ window.showPage = function (pageId, btn) {
             if (typeof loadSettings === 'function') {
                 loadSettings();
             }
-            if (typeof loadSdModels === 'function') {
-                loadSdModels();
-            }
-            if (typeof loadLlmModels === 'function') {
-                loadLlmModels();
-            }
+
         }
         if (pageId === 'downloads') {
             if (typeof startDownloadsPolling === 'function') {
@@ -151,6 +151,7 @@ window.showPage = function (pageId, btn) {
                 loadModulesTab();
             }
         }
+
     } catch (error) {
         console.error('Error in showPage:', error);
     }

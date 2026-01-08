@@ -13,31 +13,28 @@ let unlistenFn = null;
  * Subscribe to system stats events
  * @param {Function} callback - Called with stats object on each update
  * @returns {Promise<Function>} Unsubscribe function
- *
- * @example
- * const unsub = await subscribeToSystemStats((stats) => {
- *     console.log('CPU:', stats.cpu.percent);
- *     console.log('RAM:', stats.ram.percent);
- * });
- *
- * // Later: unsub();
  */
 export async function subscribeToSystemStats(callback) {
     systemStatsCallback = callback;
 
     // Use Tauri's listen API
     if (window.__TAURI__) {
-        const { listen } = await import('@tauri-apps/api/event');
+        try {
+            const { listen } = window.__TAURI__.event;
 
-        unlistenFn = await listen('system_stats', (event) => {
-            if (systemStatsCallback) {
-                systemStatsCallback(event.payload);
-            }
-        });
+            unlistenFn = await listen('system_stats', (event) => {
+                if (systemStatsCallback) {
+                    systemStatsCallback(event.payload);
+                }
+            });
 
-        return unlistenFn;
+            return unlistenFn;
+        } catch (e) {
+            console.warn('[System Events] Tauri listen failed, falling back to polling:', e);
+            return fallbackPolling(callback);
+        }
     } else {
-        console.warn('Tauri not available, falling back to polling');
+        console.warn('[System Events] Tauri not available, falling back to polling');
         return fallbackPolling(callback);
     }
 }
@@ -61,7 +58,7 @@ async function fallbackPolling(callback) {
         try {
             let stats;
             if (window.__TAURI__) {
-                stats = await window.__TAURI__.invoke('get_system_stats');
+                stats = await window.__TAURI__.core.invoke('get_system_stats');
             } else {
                 // Fetch from bridge interceptor (Mock Mode)
                 const res = await fetch('/api/system_stats');
@@ -74,9 +71,9 @@ async function fallbackPolling(callback) {
                 callback(stats);
             }
         } catch (e) {
-            console.error('Polling error:', e);
+            console.error('[System Events] Polling error:', e);
         }
-    }, 1000);
+    }, 2000);
 
     return () => clearInterval(pollInterval);
 }
@@ -87,7 +84,7 @@ async function fallbackPolling(callback) {
  */
 export async function getSystemStatsOnce() {
     if (window.__TAURI__) {
-        return await window.__TAURI__.invoke('get_system_stats');
+        return await window.__TAURI__.core.invoke('get_system_stats');
     }
     return null;
 }

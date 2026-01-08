@@ -105,5 +105,6 @@
   "ui.launcher.web.chat_question_4": "是时候提高效率了",
   "ui.launcher.web.chat_question_5": "系统就绪，等待指令",
   "ui.launcher.button.cancel": "取消",
-  "ui.launcher.button.close": "关闭"
+  "ui.launcher.button.close": "关闭",
+  "ui.launcher.web.chat_no_one_heard": "没人听到你的声音"
 }

@@ -74,6 +74,11 @@ body.snapping #app-header {
     transition: all 0.2s;
     color: var(--text-secondary);
     /* -webkit-app-region: no-drag; -> handled by parent container */
+    -webkit-app-region: no-drag;
+}
+
+.window-control-btn svg {
+    pointer-events: none;
 }
 
 .window-control-btn:hover {
@@ -172,6 +177,7 @@ body.snapping #app-header {
     align-items: center;
     justify-content: center;
     padding: 0;
+    -webkit-app-region: no-drag;
 
     /* Squircle Shape */
     width: 36px;
@@ -193,6 +199,13 @@ body.snapping #app-header {
 .lang-btn:active {
     transform: translateY(0);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.lang-btn .flag-icon,
+.lang-btn svg,
+.lang-btn span {
+    cursor: pointer;
+    pointer-events: none;
 }
 
 /* Main Trigger Button specific styles */

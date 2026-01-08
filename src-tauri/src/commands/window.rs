@@ -28,3 +28,8 @@ pub fn show_window(window: tauri::Window) {
     let _ = window.show();
     let _ = window.set_focus();
 }
+
+#[tauri::command]
+pub fn hide_window(window: tauri::Window) {
+    let _ = window.hide();
+}

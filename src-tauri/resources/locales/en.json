@@ -105,5 +105,8 @@
   "ui.launcher.web.chat_question_4": "Time to be productive",
   "ui.launcher.web.chat_question_5": "System ready. Awaiting instructions",
   "ui.launcher.button.cancel": "Cancel",
-  "ui.launcher.button.close": "Close"
+  "ui.launcher.button.close": "Close",
+  "ui.launcher.web.chat_no_one_heard": "No one heard you",
+  "ui.launcher.web.close_confirm_title": "Exit App",
+  "ui.launcher.web.close_confirm_message": "Are you sure you want to close the application?"
 }

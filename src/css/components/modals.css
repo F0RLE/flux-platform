@@ -1,9 +1,12 @@
 ﻿/* Confirmation Modal */
-/* Blur launcher when closing - apply to specific containers, not body */
+/* Blur launcher when closing - apply to all content containers */
 body.launcher-blur .page,
-body.launcher-blur .top-controls {
-    filter: blur(8px);
-    -webkit-filter: blur(8px);
+body.launcher-blur .top-controls,
+body.launcher-blur #sidebar,
+body.launcher-blur #app-header,
+body.launcher-blur #main-area {
+    filter: blur(10px);
+    -webkit-filter: blur(10px);
     transition: filter 0.3s ease;
     pointer-events: none !important;
 }
@@ -60,13 +63,13 @@ body.launcher-blur .modal {
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2000000 !important;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 0.4s ease, visibility 0s linear 0.4s;
 }
 
@@ -197,7 +200,8 @@ button[onclick*="close"],
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    animation: moduleModalSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Use global scaleIn */
+    animation: scaleIn 0.4s var(--ease-smooth);
     position: relative;
     z-index: 10000;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
@@ -213,18 +217,6 @@ button[onclick*="close"],
     .module-settings-modal {
         min-width: 0;
         min-height: 500px;
-    }
-}
-
-@keyframes moduleModalSlideIn {
-    0% {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-
-    100% {
-        opacity: 1;
-        transform: scale(1);
     }
 }
 
@@ -324,39 +316,28 @@ button[onclick*="close"],
 
 .module-settings-modal-content .form-group {
     margin-bottom: 1.5rem;
-    animation: formFieldFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    /* Use global fadeInLeft */
+    animation: fadeInLeft 0.4s var(--ease-smooth) backwards;
 }
 
 .module-settings-modal-content .form-group:nth-child(1) {
-    animation-delay: 0.1s;
+    animation-delay: 0.05s;
 }
 
 .module-settings-modal-content .form-group:nth-child(2) {
-    animation-delay: 0.15s;
+    animation-delay: 0.1s;
 }
 
 .module-settings-modal-content .form-group:nth-child(3) {
-    animation-delay: 0.2s;
+    animation-delay: 0.15s;
 }
 
 .module-settings-modal-content .form-group:nth-child(4) {
-    animation-delay: 0.25s;
+    animation-delay: 0.2s;
 }
 
 .module-settings-modal-content .form-group:nth-child(5) {
-    animation-delay: 0.3s;
-}
-
-@keyframes formFieldFadeIn {
-    0% {
-        opacity: 0;
-        transform: translateX(-10px);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    animation-delay: 0.25s;
 }
 
 .module-settings-modal-content .form-label {
@@ -471,21 +452,11 @@ button[onclick*="close"],
     background: linear-gradient(90deg, #d3a93a, #ffde7a, #d3a93a);
     box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
     border-radius: 8px;
-    animation: shimmer 1.2s infinite ease-in-out;
-}
-
-@keyframes shimmer {
-    0% {
-        left: -40%;
-    }
-
-    50% {
-        left: 60%;
-    }
-
-    100% {
-        left: 100%;
-    }
+    /* Use optimized global animation */
+    animation: progressIndeterminate 1.5s infinite linear;
+    /* Reset left/width for transform-based animation */
+    left: 0;
+    will-change: transform;
 }
 
 @keyframes waveFlow {

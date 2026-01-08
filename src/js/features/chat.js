@@ -1,4 +1,5 @@
 ﻿
+
 document.addEventListener('keydown', (e) => {
     // Ctrl/Cmd + S to save current settings
     if ((e.ctrlKey || e.metaKey) && e.key === 's') {
@@ -493,8 +494,50 @@ function appendChatMessage(role, content, opts = {}) {
 
     const bubble = document.createElement('div');
     bubble.className = 'chat-bubble' + (opts.error ? ' chat-error' : '');
-    bubble.textContent = content || '';
 
+    // Render text content
+    const textNode = document.createElement('div');
+    textNode.textContent = content || '';
+    bubble.appendChild(textNode);
+
+    // Render file attachments (Media Cards)
+    if (opts.attachments && Array.isArray(opts.attachments) && opts.attachments.length > 0) {
+        const attachContainer = document.createElement('div');
+        attachContainer.style.display = 'flex';
+        attachContainer.style.flexWrap = 'wrap';
+        attachContainer.style.gap = '6px';
+        attachContainer.style.marginTop = '8px';
+
+        opts.attachments.forEach(f => {
+            const card = document.createElement('div');
+            card.className = 'chat-media-card';
+            card.style.background = 'rgba(0,0,0,0.1)'; // Slightly darker in bubble
+            card.style.border = '1px solid rgba(255,255,255,0.1)';
+            card.title = f.name;
+
+            const iconSvg = getFileIcon(f.name);
+            let name = f.name || 'file';
+            if (name.length > 10) {
+                 const extIndex = name.lastIndexOf('.');
+                 if (extIndex > 0 && name.length - extIndex < 5) {
+                     const ext = name.substring(extIndex);
+                     name = name.substring(0, 5) + '..' + ext;
+                 } else {
+                     name = name.substring(0, 7) + '..';
+                 }
+            }
+
+            // Simplified card for history (no remove button)
+            card.innerHTML = `
+                <div class="media-icon" style="width:24px;height:24px;">${iconSvg}</div>
+                <div class="media-name" style="font-size:0.6rem;">${name}</div>
+            `;
+            attachContainer.appendChild(card);
+        });
+        bubble.appendChild(attachContainer);
+    }
+
+    // Render standard images (Base64) - Legacy or specific handling
     if (opts.images && Array.isArray(opts.images)) {
         opts.images.forEach(img => {
             try {
@@ -520,28 +563,120 @@ function appendChatMessage(role, content, opts = {}) {
 }
 
 function updateChatAttachmentsUI() {
+    console.log('[Chat] Updating Attachments UI. Count:', chatFiles.length);
     const wrap = document.getElementById('chat-attachments');
-    if (!wrap) return;
+    if (!wrap) {
+        console.error('[Chat] Attachments wrapper NOT FOUND');
+        return;
+    }
     wrap.innerHTML = '';
     if (!chatFiles.length) {
         wrap.style.display = 'none';
         return;
     }
     wrap.style.display = 'flex';
-    chatFiles.forEach((f, idx) => {
-        const chip = document.createElement('div');
-        chip.className = 'chat-attach-chip';
-        chip.innerHTML = `<span>${(f.name || 'file')} (${chatFormatBytes(f.size)})</span>`;
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.title = 'Remove';
-        btn.textContent = '×';
-        btn.onclick = () => {
+
+    // Show only first 6 files (more space for cards)
+    const maxVisible = 6;
+    const visibleFiles = chatFiles.slice(0, maxVisible);
+    const hiddenCount = chatFiles.length - maxVisible;
+
+    visibleFiles.forEach((f, idx) => {
+        const card = document.createElement('div');
+        card.className = 'chat-media-card';
+        card.title = f.name; // Tooltip for full name
+
+        // Icon logic
+        let iconSvg = '';
+        try { iconSvg = getFileIcon(f.name); } catch(e) { console.error('getFileIcon error', e); iconSvg = '📄'; }
+
+        // Truncate name for display (e.g. "style.css")
+        let name = f.name || 'file';
+        if (name.length > 10) {
+             // Smart truncate: "verylongname.txt" -> "very...txt"
+             const extIndex = name.lastIndexOf('.');
+             if (extIndex > 0 && name.length - extIndex < 5) {
+                 const ext = name.substring(extIndex);
+                 name = name.substring(0, 6) + '..' + ext;
+             } else {
+                 name = name.substring(0, 8) + '..';
+             }
+        }
+
+        card.innerHTML = `
+            <div class="media-icon">${iconSvg}</div>
+            <div class="media-name">${name}</div>
+            <button type="button" class="media-remove" title="Remove">×</button>
+        `;
+
+        // Remove handler
+        const btn = card.querySelector('.media-remove');
+        btn.onclick = (e) => {
+            e.stopPropagation();
             chatFiles.splice(idx, 1);
             updateChatAttachmentsUI();
         };
-        chip.appendChild(btn);
-        wrap.appendChild(chip);
+
+        wrap.appendChild(card);
+    });
+
+    // +N Indicator as a card
+    if (hiddenCount > 0) {
+        const moreCard = document.createElement('div');
+        moreCard.className = 'chat-media-card more-card';
+        moreCard.innerHTML = `<span>+${hiddenCount}</span>`;
+        wrap.appendChild(moreCard);
+    }
+}
+
+function getFileIcon(filename) {
+    const ext = filename.split('.').pop().toLowerCase();
+
+    // Icons (using simple SVGs or references to existing icons)
+    // We'll use simple inline SVGs for distinct look
+
+    // Code
+    if (['js', 'ts', 'py', 'java', 'c', 'cpp', 'rs', 'go', 'html', 'css', 'json', 'xml'].includes(ext)) {
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>`;
+    }
+    // Image
+    if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'bmp'].includes(ext)) {
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>`;
+    }
+    // Text / Doc
+    if (['txt', 'md', 'doc', 'docx', 'pdf', 'rtf'].includes(ext)) {
+         return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`;
+    }
+    // Archive
+    if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) {
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`;
+    }
+
+    // Default File
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>`;
+}
+
+function isTextFile(file) {
+    const textTypes = [
+        'text/', 'application/json', 'application/javascript', 'application/x-javascript',
+        'application/xml', 'application/x-sh', 'application/x-python', 'application/typescript'
+    ];
+    const textExts = [
+        '.txt', '.md', '.js', '.ts', '.py', '.html', '.css', '.json', '.xml', '.yaml', '.yml',
+        '.c', '.cpp', '.h', '.rs', '.go', '.java', '.cs', '.sh', '.bat', '.ps1', '.ini', '.cfg', '.conf', '.env'
+    ];
+
+    if (file.type && textTypes.some(t => file.type.startsWith(t))) return true;
+    const name = (file.name || '').toLowerCase();
+    return textExts.some(ext => name.endsWith(ext));
+}
+
+function readFileAsText(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ''));
+        reader.onerror = reject;
+        reader.readAsText(file);
     });
 }
 
@@ -738,8 +873,7 @@ window.sendChat = async function () {
     // Auto-detect mode
     const mode = detectChatMode(text);
 
-    const fileNote = chatFiles.length ? `\n(${t('ui.launcher.web.chat_attached', 'Attached')}: ${chatFiles.map(f => f.name).join(', ')})` : '';
-    appendChatMessage('user', (text || '') + fileNote);
+
 
     // Clear input immediately after showing user message
     if (input) input.value = '';
@@ -810,21 +944,47 @@ window.sendChat = async function () {
             }
         }
 
+        // Separate files into attachments (images/binary) and text content
+        let combinedText = text;
+        const textFilesContent = [];
+
         for (const f of chatFiles) {
             if (!f) continue;
             if (f.size > maxFileBytes) {
                 throw new Error(t('ui.launcher.web.chat_file_too_large', 'File too large') + `: ${f.name}`);
             }
             totalBytes += f.size;
-            if (totalBytes > maxTotalBytes) {
-                throw new Error(t('ui.launcher.web.chat_total_too_large', 'Total attachments too large'));
+
+            if (isTextFile(f)) {
+                try {
+                    const content = await readFileAsText(f);
+                    textFilesContent.push(`\n\n--- File: ${f.name} ---\n${content}\n--- End of File ${f.name} ---`);
+                } catch (e) {
+                    console.error("Failed to read text file", f.name, e);
+                    // Fallback to base64 attachment if read fails? Or just skip?
+                    // Let's try to send as attachment if text read fails
+                    const b64 = await readFileAsBase64(f);
+                    attachments.push({ name: f.name, type: f.type || 'application/octet-stream', size: f.size, data_base64: b64 });
+                }
+            } else {
+                // Image or binary
+                const b64 = await readFileAsBase64(f);
+                attachments.push({ name: f.name, type: f.type || 'application/octet-stream', size: f.size, data_base64: b64 });
             }
-            const b64 = await readFileAsBase64(f);
-            attachments.push({ name: f.name, type: f.type || 'application/octet-stream', size: f.size, data_base64: b64 });
+        }
+
+        if (totalBytes > maxTotalBytes) {
+             throw new Error(t('ui.launcher.web.chat_total_too_large', 'Total attachments too large'));
+        }
+
+        // Append text file contents to message
+        if (textFilesContent.length > 0) {
+            combinedText += textFilesContent.join('');
         }
 
         const history = chatHistory.slice(-40);
-        const payload = { mode, text, history, attachments };
+        // Use combinedText instead of original text
+        const payload = { mode, text: combinedText, history, attachments };
 
         const res = await fetch('/api/chat/send', {
             method: 'POST',
@@ -846,7 +1006,45 @@ window.sendChat = async function () {
         }
 
         // Keep local history (text only)
-        if (text) chatHistory.push({ role: 'user', content: text });
+        // Keep local history (visual representation)
+        // Note: We don't necessarily want to show the huge file content in the UI history bubble,
+        // just the user's message + file attachments indicator.
+        // But for consistency with what the bot sees, we *could*, but it clutters UI.
+        // Let's keep UI simple: just the message entered by user.
+        // The files are shown as chips anyway (until cleared).
+
+
+        // NOTE: If we want context continuity, we should push combinedText to history?
+        // But that bloats history fast. Usually RAG or context handling handles this.
+        // For this simple implementation, we assume the file IS the context for *this* turn.
+        // If we want the bot to remember it next turn, we SHOULD push combinedText.
+        // Let's push combinedText to history but maybe show trimmed version in UI?
+        // Current implementation `chatHistory` IS the context sent to backend.
+        // So YES, we MUST push combinedText if we want the bot to remember it.
+        // However, `appendChatMessage` below renders it.
+
+        // REVISION: The original code pushed `text`.
+        // If I push `combinedText`, the next turn will include it in history.
+        // That seems correct for "context".
+        // BUT, `appendChatMessage` uses `text`.
+
+        // Let's stick to pushing `combinedText` to history so the bot keeps context.
+        if (combinedText || attachments.length > 0) {
+             // If we have text files, we want to show them as attachments in the history card,
+             // NOT just hidden in the text.
+             // We need to pass the original `chatFiles` (or similar) to `appendChatMessage`
+             // because `attachments` array might only contain non-text binary files if we striped them?
+             // Actually `attachments` currently contains only binary/images.
+
+             // Let's construct a display list for history
+             const displayAttachments = chatFiles.map(f => ({ name: f.name, size: f.size }));
+
+             // Append to local history UI
+             appendChatMessage('user', text, { attachments: displayAttachments });
+
+             // Push to history context (combined text includes file content)
+             chatHistory.push({ role: 'user', content: combinedText });
+        }
 
         // Remove typing indicator
         removeTypingIndicator(typingId);
@@ -861,16 +1059,16 @@ window.sendChat = async function () {
                 chatHistory.push({ role: 'assistant', content: reply.text || '' });
             }
         } else {
-            appendChatMessage('assistant', (data && data.error) ? String(data.error) : t('ui.launcher.web.chat_error', 'Error'), { error: true });
+            // "Вас никто не услышал" style error
+            appendChatMessage('assistant', t('ui.launcher.web.chat_no_one_heard', 'No one heard you'), { error: true });
         }
     } catch (e) {
         // Remove typing indicator on error too
         removeTypingIndicator(typingId);
-        appendChatMessage('assistant', String(e && e.message ? e.message : e), { error: true });
+        appendChatMessage('assistant', t('ui.launcher.web.chat_no_one_heard', 'No one heard you'), { error: true });
     } finally {
         if (btn) {
             btn.disabled = false;
-            btn.textContent = t('ui.launcher.web.chat_send', 'Отправить');
         }
         // Input already cleared above, just clear attachments
         chatFiles = [];
@@ -1619,6 +1817,38 @@ window.showInstallModal = function () {
     };
 };
 
+// Initialize Chat Listeners (Robust handling for Module timing)
+const initChatListeners = () => {
+    console.log('[Chat] Initializing listeners...');
+
+    // File Input Listener
+    const chatFileEl = document.getElementById('chat-file');
+    if (chatFileEl) {
+        // Remove old listener to prevent duplicates if any (though unlikely in module)
+        const newEl = chatFileEl.cloneNode(true);
+        chatFileEl.parentNode.replaceChild(newEl, chatFileEl);
+
+        newEl.addEventListener('change', () => {
+            console.log('[Chat] File input changed', newEl.files);
+            try {
+                const files = Array.from(newEl.files || []);
+                if (files.length) {
+                    const newFiles = files.filter(f => !chatFiles.some(existing => existing.name === f.name && existing.size === f.size));
+                    chatFiles.push(...newFiles);
+                    updateChatAttachmentsUI();
+                }
+                newEl.value = '';
+            } catch (e) { console.error(e); }
+        });
+    }
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initChatListeners);
+} else {
+    initChatListeners();
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     flushLauncherLogs();
 
@@ -1659,8 +1889,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         closeBtn.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            if (typeof window.showCloseConfirmModal === 'function') {
-                window.showCloseConfirmModal();
+            if (typeof window.hideToTray === 'function') {
+                window.hideToTray();
             }
             return false;
         });
@@ -1770,14 +2000,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             } catch (e) { }
         });
     }
+
+
+
+
+    // Auto-resize delegation or re-attach
+
+
+    // Auto-resize delegation or re-attach
     const chatInputEl = document.getElementById('chat-input');
     if (chatInputEl) {
-        chatInputEl.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                window.sendChat();
-            }
-        });
+        const autoResize = () => {
+            chatInputEl.style.height = 'auto';
+            chatInputEl.style.height = Math.min(chatInputEl.scrollHeight, 200) + 'px';
+        };
+        chatInputEl.addEventListener('input', autoResize);
     }
 
     // Steps 10-14: Parallel initialization of independent operations
@@ -2015,14 +2252,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // --- Shutdown on unload ---
 // Only shutdown when explicitly closing via close button (not on refresh)
 let isClosingApp = false;
-
-// Override showCloseConfirmModal to set the flag
-const originalShowCloseConfirmModal = window.showCloseConfirmModal;
-window.showCloseConfirmModal = function () {
-    if (typeof originalShowCloseConfirmModal === 'function') {
-        originalShowCloseConfirmModal();
-    }
-};
 
 // Hook into confirmClose to set the flag before actually closing
 const originalConfirmClose = window.confirmClose;

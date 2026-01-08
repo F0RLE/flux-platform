@@ -15,7 +15,7 @@
 
 /* === COMPONENTS === */
 @import 'components/icons.css';
-@import 'components/splash.css';
+/* @import 'components/splash.css'; - Inlined in index.html to prevent FOUC */
 @import 'components/buttons.css';
 @import 'components/forms.css';
 @import 'components/cards.css';
